@@ -51,4 +51,13 @@
         }                                                                                                                                            
     ];                                                                                                                                               
                                                                                                                                                      
+    function getLevelData(i) {                                                                                                                       
+        if (i < levels.length) {                                                                                                                     
+            return levels.slice(0)[i];                                                                                                               
+        } else {                                                                                                                                     
+            throw new Error('There is no data for Level:' + i);                                                                                      
+        }                                                                                                                                            
+    }
+
+    window.getLevelData = getLevelData;
 })();
