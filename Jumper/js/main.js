@@ -1,4 +1,5 @@
 (function () { // private module pattern
+
     'use strict';
 
     /* CONSTANTS */
