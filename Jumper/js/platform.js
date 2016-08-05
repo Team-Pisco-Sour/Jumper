@@ -21,10 +21,8 @@
         FRICTION = 1 / 8,                                                  // player take 1/8 second to stop from maxDeltaX (horizontal friction)
         IMPULSE = 15 * FRAMES_PER_SECOND,                                  // player jump impulse
         FALLING_JUMP = FRAMES_PER_SECOND / 5,                              // player allowed to jump for 1/5 second after falling off a platform
-        //ICECUBE = { WIDTH: ROW_HEIGHT, HEIGHT: ROW_HEIGHT },             // logical size of iceCube
         DIRECTION = { NONE: 0, LEFT: 1, RIGHT: 2 },                        // useful enum for declaring an abstract direction
         STEP = { FRAMES: 8, W: COL_WIDTH / 10, H: ROW_HEIGHT },            // attributes of player stepping up
-        //IMAGES = ['ground', 'player', 'iceCubes'],                       // sprite image files for loading
         IMAGES = ['ground', 'player'],                                     // sprite image files for loading
         PLAYER = {
             RIGHT: { x: 1008, y: 0, w: 72, h: 96, frames: 6, fps: 30 },    // animation - player running right
@@ -40,7 +38,6 @@
     function y2row(y) { return Math.floor(y / ROW_HEIGHT); }                               // convert y-coord to playground row index
     function col2x(col) { return col * COL_WIDTH; }                                        // convert playground column index to x-coord
     function row2y(row) { return row * ROW_HEIGHT; }                                       // convert playground row index to y-coord
-    //function x2a(x) { return 360 * (normalizeX(x) / playground.width); }                   // convert x-coord to an angle around the playground
     function tx(x) {                                                                       // transform x-coord for rendering
         x = normalizeX(x - player.rx);
         if (x > (playground.width / 2)) {
@@ -375,5 +372,168 @@
         }
     };
 
-    
+    /* RENDERER */
+
+    let Renderer = {
+
+        init: function (images) {
+
+            this.images = images;
+            this.canvas = Game.Canvas.init(document.getElementById('canvas'), CANVAS_WIDTH, CANVAS_HEIGHT);
+            this.ctx = this.canvas.getContext('2d');
+            this.ground = this.createGround();
+            this.platformWidth = COL_WIDTH;
+
+            return this;
+
+        },
+
+        //-------------------------------------------------------------------------
+
+        render: function (deltaTime) {
+
+            player.rx = normalizeX(Game.Math.lerp(player.x, player.dx, deltaTime));
+            player.ry = Game.Math.lerp(player.y, player.dy, deltaTime);
+
+            player.ry = Math.max(0, player.ry); // don't let sub-frame interpolation take the player below the horizon
+
+            this.ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+            this.ctx.save();
+            this.ctx.translate(CANVAS_WIDTH / 2, 0);
+            this.renderFront(this.ctx);
+            this.renderGround(this.ctx);
+            this.renderPlayer(this.ctx);
+            this.ctx.restore();
+
+        },
+
+        //-------------------------------------------------------------------------
+
+        renderGround: function (ctx) {
+
+            let ground = this.ground,
+                x = ground.w * (player.rx / playground.width),
+                y = ty(0),
+                w = Math.min(CANVAS_WIDTH, ground.w - x),
+                w2 = CANVAS_WIDTH - w;
+
+            ctx.drawImage(ground.image, x, 0, w, ground.h, -CANVAS_WIDTH / 2, y, w, ground.h);
+
+            if (w2 > 0)
+                ctx.drawImage(ground.image, 0, 0, w2, ground.h, -CANVAS_WIDTH / 2 + w, y, w2, ground.h);
+
+        },
+
+        //-------------------------------------------------------------------------
+
+        renderBack: function (ctx) {
+
+            ctx.strokeStyle = playground.color.stroke;
+            ctx.lineWidth = 2;
+
+            let left = x2col(player.rx - playground.width / 4),
+                right = x2col(player.rx + playground.width / 4);
+
+            this.renderQuadrant(ctx, normalizeColumn(left - 3), left, +1);
+            this.renderQuadrant(ctx, normalizeColumn(right + 3), right, -1);
+
+        },
+
+        //-------------------------------------------------------------------------
+
+        renderFront: function (ctx) {
+
+            ctx.strokeStyle = playground.color.stroke;
+            ctx.lineWidth = 2;
+
+            let left = x2col(player.rx - playground.width / 4),
+                center = x2col(player.rx),
+                right = x2col(player.rx + playground.width / 4);
+
+            this.renderQuadrant(ctx, left, normalizeColumn(center + 0), +1);
+            this.renderQuadrant(ctx, right, normalizeColumn(center - 1), -1);
+
+        },
+
+        //-------------------------------------------------------------------------
+
+        renderQuadrant: function (ctx, min, max, direction) {
+
+            let r, y, cell,
+                rmin = Math.max(0, y2row(player.ry - HORIZON_HEIGHT) - 1),
+                rmax = Math.min(playground.rows - 1, rmin + (CANVAS_HEIGHT / ROW_HEIGHT + 1)),
+                c = min;
+
+            while (c !== max) {
+
+                for (r = rmin; r <= rmax; r++) {
+
+                    y = ty(r * ROW_HEIGHT);
+                    cell = playground.getCell(r, c);
+
+                    if (cell.platform)
+                        this.renderPlatform(ctx, c, y);
+                }
+
+                c = normalizeColumn(c + direction);
+            }
+
+        },
+
+        //-------------------------------------------------------------------------
+
+        renderPlatform: function (ctx, col, y) {
+
+            let x = col2x(col + 0.5),
+                x0 = tx(x),
+                x1 = x0 - this.platformWidth / 2,
+                x2 = x0 + this.platformWidth / 2;
+
+            ctx.fillStyle = playground.color.platform;
+            ctx.fillRect(x1, y - ROW_HEIGHT, x2 - x1, ROW_HEIGHT);
+            ctx.lineWidth = 1;
+            ctx.strokeRect(x1, y - ROW_HEIGHT, x2 - x1, ROW_HEIGHT);
+
+        },
+
+        //-------------------------------------------------------------------------
+
+        renderPlayer: function (ctx) {
+
+            ctx.drawImage(
+                this.images.player,
+                player.animation.x + (player.animationFrame * player.animation.w),
+                player.animation.y,
+                player.animation.w,
+                player.animation.h,
+                tx(player.rx) - player.w / 2,
+                ty(player.ry) - player.h,
+                player.w,
+                player.h);
+
+        },
+
+        //-------------------------------------------------------------------------
+
+        createGround: function () {
+
+            let w = CANVAS_WIDTH * GROUND_SPEED,
+                h = HORIZON_HEIGHT,
+                tile = this.images.ground,
+                tw = tile.width,
+                th = tile.height,
+                max = Math.floor(w / tile.width),
+                dw = w / max,
+                image = Game.Canvas.render(w, h, function (ctx) {
+
+                    for (let n = 0; n < max; n++)
+                        ctx.drawImage(tile, 0, 0, tw, th, n * dw, 0, dw, h);
+                });
+
+            return { w: w, h: h, image: image };
+
+        }
+
+    };
+
 })();
