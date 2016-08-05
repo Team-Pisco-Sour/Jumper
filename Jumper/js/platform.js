@@ -536,4 +536,94 @@
 
     };
 
+    /* VARIABLES */
+
+    let playground,
+        player,
+        renderer;
+
+    /* GAME - SETUP/UPDATE/RENDER */
+
+    function onkey(event, key, pressed) {
+
+        let KEY = { SPACE: 32, LEFT: 37, RIGHT: 39 }; // input key codes
+
+        switch (key) {
+
+            case KEY.LEFT:
+                player.input.left = pressed;
+                event.preventDefault();
+                return false;
+            case KEY.RIGHT:
+                player.input.right = pressed;
+                event.preventDefault();
+                return false;
+
+            case KEY.SPACE:
+                player.input.jump = pressed && player.input.jumpAvailable;
+                player.input.jumpAvailable = !pressed;
+                break;
+        }
+
+    }
+
+    function run() {
+
+        let level = 0,
+            levelData = window.getLevelData(level);
+
+        // load multiple images and callback when ALL images have loaded
+        Game.Load.images(IMAGES, function (images) {
+
+            // SETUP
+            playground = Object.create(Playground).init(levelData);
+            player = Object.create(Player).init();
+            renderer = Object.create(Renderer).init(images);
+
+            document.addEventListener('keydown', function (event) {
+                return onkey(event, event.keyCode, true);
+            }, false);
+
+            document.addEventListener('keyup', function (event) {
+                return onkey(event, event.keyCode, false);
+            }, false);
+
+            let now,
+                deltaTime = 0,
+                last = Game.Math.timestamp(),
+                oneFrameTime = 1 / FRAMES_PER_SECOND;
+
+            //===== Game Loop =====//
+
+            function frame() {
+
+                now = Game.Math.timestamp();
+                deltaTime = deltaTime + Math.min(1, (now - last) / 1000);
+
+                while (deltaTime > oneFrameTime) {
+
+                    deltaTime = deltaTime - oneFrameTime;
+
+                    // UPDATE
+                    player.update(oneFrameTime);
+                }
+
+                // RENDER
+                renderer.render(deltaTime);
+
+                last = now;
+
+                requestAnimationFrame(frame);
+            }
+
+            //===== Game Loop =====//
+
+            frame();
+        });
+    }
+
+    /* PLAY THE GAME! */
+
+    run();
+
 })();
