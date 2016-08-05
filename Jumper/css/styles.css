@@ -23,6 +23,10 @@ body {
     border: 1px solid #fefefe;
 }
 
+.non-displayed-images {
+    display: none;
+}
+
 #instructions {
     font-style: italic;
     color: #999;

@@ -1,4 +1,4 @@
-(function () { // private module pattern
+window.addEventListener('load', function () {
 
     'use strict';
 
@@ -24,7 +24,10 @@
         FALLING_JUMP = FRAMES_PER_SECOND / 5,                              // player allowed to jump for 1/5 second after falling off a platform
         DIRECTION = { NONE: 0, LEFT: 1, RIGHT: 2 },                        // useful enum for declaring an abstract direction
         STEP = { FRAMES: 8, W: COL_WIDTH / 10, H: ROW_HEIGHT },            // attributes of player stepping up
-        IMAGES = ['ground', 'player'],                                     // sprite image files for loading
+        IMAGES = {                                                         // image file ID's
+            groundImgID: 'ground',
+            playerImgID: 'player'
+        },
         PLAYER = {
             RIGHT: { x: 1008, y: 0, w: 72, h: 96, frames: 6, fps: 30 },    // animation - player running right
             STAND: { x: 1008, y: 0, w: 72, h: 96, frames: 1, fps: 30 },    // animation - player standing still
@@ -107,7 +110,6 @@
 
             return map;
         }
-
     };
 
     /* PLAYER */
@@ -135,7 +137,6 @@
             this.animation = PLAYER.STAND;
 
             return this;
-
         },
 
         createCollisionPoints: function () {
@@ -150,7 +151,6 @@
                 underLeft: { x: -this.w / 4, y: -1 },
                 underRight: { x: this.w / 4, y: -1 }
             };
-
         },
 
         update: function (deltaTime) {
@@ -201,7 +201,6 @@
             if (this.falling && (this.fallingJump === 0) && (this.y < 0)) {
                 this.dy = 0;
             }
-
         },
 
         updatePosition: function (deltaTime) {
@@ -210,7 +209,6 @@
             this.y = this.y + (deltaTime * this.dy);
             this.dx = Game.Math.bound(this.dx + (deltaTime * this.ddx), -this.maxdX, this.maxdX);
             this.dy = Game.Math.bound(this.dy + (deltaTime * this.ddy), -this.maxdY, this.maxdY);
-
         },
 
         animate: function () {
@@ -231,7 +229,6 @@
             point.cell = playground.getCell(point.row, point.col);
             point.blocked = point.cell.platform;
             point.platform = point.cell.platform;
-
         },
 
         checkCollision: function () {
@@ -301,14 +298,12 @@
                 return this.startFalling(true);
 
             return false; // done, we didn't collide with anything
-
         },
 
         startFalling: function (allowFallingJump) {
 
             this.falling = true;
             this.fallingJump = allowFallingJump ? FALLING_JUMP : 0;
-
         },
 
         collide: function (point, left) {
@@ -317,7 +312,6 @@
             this.dx = 0;
 
             return true;
-
         },
 
         collideUp: function (point) {
@@ -326,7 +320,6 @@
             this.dy = 0;
 
             return true;
-
         },
 
         collideDown: function (point) {
@@ -336,7 +329,6 @@
             this.falling = false;
 
             return true;
-
         },
 
         performJump: function () {
@@ -345,7 +337,6 @@
             this.ddy = this.impulse; // an instant big force impulse
             this.startFalling(false);
             this.input.jump = false;
-
         },
 
         startSteppingUp: function (direction) {
@@ -353,7 +344,6 @@
             this.stepping = direction;
             this.stepCount = STEP.FRAMES;
             return false; // NOT considered a collision
-
         },
 
         stepUp: function () {
@@ -369,7 +359,6 @@
 
             if (--(this.stepCount) === 0)
                 this.stepping = DIRECTION.NONE;
-
         }
     };
 
@@ -377,16 +366,18 @@
 
     let Renderer = {
 
-        init: function (images) {
+        init: function () {
 
-            this.images = images;
-            this.canvas = Game.Canvas.init(document.getElementById('canvas'), CANVAS_WIDTH, CANVAS_HEIGHT);
+            this.canvas = document.getElementById('canvas');
+            this.canvas.width = CANVAS_WIDTH;
+            this.canvas.height = CANVAS_HEIGHT;
+
             this.ctx = this.canvas.getContext('2d');
+
             this.ground = this.createGround();
             this.platformWidth = COL_WIDTH;
 
             return this;
-
         },
 
         //-------------------------------------------------------------------------
@@ -405,7 +396,6 @@
             this.renderGround(this.ctx);
             this.renderPlayer(this.ctx);
             this.ctx.restore();
-
         },
 
         //-------------------------------------------------------------------------
@@ -420,9 +410,9 @@
 
             ctx.drawImage(ground.image, x, 0, w, ground.h, -CANVAS_WIDTH / 2, y, w, ground.h);
 
-            if (w2 > 0)
+            if (w2 > 0) {
                 ctx.drawImage(ground.image, 0, 0, w2, ground.h, -CANVAS_WIDTH / 2 + w, y, w2, ground.h);
-
+            }
         },
 
         //-------------------------------------------------------------------------
@@ -437,7 +427,6 @@
 
             this.renderQuadrant(ctx, normalizeColumn(left - 3), left, +1);
             this.renderQuadrant(ctx, normalizeColumn(right + 3), right, -1);
-
         },
 
         //-------------------------------------------------------------------------
@@ -478,7 +467,6 @@
 
                 c = normalizeColumn(c + direction);
             }
-
         },
 
         //-------------------------------------------------------------------------
@@ -494,15 +482,16 @@
             ctx.fillRect(x1, y - ROW_HEIGHT, x2 - x1, ROW_HEIGHT);
             ctx.lineWidth = 1;
             ctx.strokeRect(x1, y - ROW_HEIGHT, x2 - x1, ROW_HEIGHT);
-
         },
 
         //-------------------------------------------------------------------------
 
         renderPlayer: function (ctx) {
 
+            let playerImg = document.getElementById(IMAGES.playerImgID);
+
             ctx.drawImage(
-                this.images.player,
+                playerImg,
                 player.animation.x + (player.animationFrame * player.animation.w),
                 player.animation.y,
                 player.animation.w,
@@ -518,23 +507,26 @@
 
         createGround: function () {
 
-            let w = CANVAS_WIDTH * GROUND_SPEED,
-                h = HORIZON_HEIGHT,
-                tile = this.images.ground,
-                tw = tile.width,
-                th = tile.height,
-                max = Math.floor(w / tile.width),
-                dw = w / max,
-                image = Game.Canvas.render(w, h, function (ctx) {
+            let width = CANVAS_WIDTH * GROUND_SPEED,
+                height = HORIZON_HEIGHT,
+                groundImg = document.getElementById(IMAGES.groundImgID),
+                tile = groundImg,
+                max = Math.floor(width / tile.width),
+                dw = width / max;
 
-                    for (let n = 0; n < max; n++)
-                        ctx.drawImage(tile, 0, 0, tw, th, n * dw, 0, dw, h);
-                });
+            let groundCanvas = document.createElement('canvas');
 
-            return { w: w, h: h, image: image };
+            groundCanvas.width = width;
+            groundCanvas.height = height;
 
+            let ctx = groundCanvas.getContext('2d');
+
+            for (let n = 0; n < max; n++) {
+                ctx.drawImage(tile, 0, 0, tile.width, tile.height, n * dw, 0, dw, height);
+            }
+
+            return { w: width, h: height, image: groundCanvas };
         }
-
     };
 
     /* VARIABLES */
@@ -565,7 +557,6 @@
                 player.input.jumpAvailable = !pressed;
                 break;
         }
-
     }
 
     function run() {
@@ -573,58 +564,54 @@
         let level = 0,
             levelData = window.getLevelData(level);
 
-        // load multiple images and callback when ALL images have loaded
-        Game.Load.images(IMAGES, function (images) {
+        // SETUP
+        playground = Object.create(Playground).init(levelData);
+        player = Object.create(Player).init();
+        renderer = Object.create(Renderer).init();
 
-            // SETUP
-            playground = Object.create(Playground).init(levelData);
-            player = Object.create(Player).init();
-            renderer = Object.create(Renderer).init(images);
+        document.addEventListener('keydown', function (event) {
+            return onkey(event, event.keyCode, true);
+        }, false);
 
-            document.addEventListener('keydown', function (event) {
-                return onkey(event, event.keyCode, true);
-            }, false);
+        document.addEventListener('keyup', function (event) {
+            return onkey(event, event.keyCode, false);
+        }, false);
 
-            document.addEventListener('keyup', function (event) {
-                return onkey(event, event.keyCode, false);
-            }, false);
+        let now,
+            deltaTime = 0,
+            last = Game.Math.timestamp(),
+            oneFrameTime = 1 / FRAMES_PER_SECOND;
 
-            let now,
-                deltaTime = 0,
-                last = Game.Math.timestamp(),
-                oneFrameTime = 1 / FRAMES_PER_SECOND;
+        //===== Game Loop =====//
 
-            //===== Game Loop =====//
+        function frame() {
 
-            function frame() {
+            now = Game.Math.timestamp();
+            deltaTime = deltaTime + Math.min(1, (now - last) / 1000);
 
-                now = Game.Math.timestamp();
-                deltaTime = deltaTime + Math.min(1, (now - last) / 1000);
+            while (deltaTime > oneFrameTime) {
 
-                while (deltaTime > oneFrameTime) {
+                deltaTime = deltaTime - oneFrameTime;
 
-                    deltaTime = deltaTime - oneFrameTime;
-
-                    // UPDATE
-                    player.update(oneFrameTime);
-                }
-
-                // RENDER
-                renderer.render(deltaTime);
-
-                last = now;
-
-                requestAnimationFrame(frame);
+                // UPDATE
+                player.update(oneFrameTime);
             }
 
-            //===== Game Loop =====//
+            // RENDER
+            renderer.render(deltaTime);
 
-            frame();
-        });
+            last = now;
+
+            requestAnimationFrame(frame);
+        }
+
+        //===== Game Loop =====//
+
+        frame();
     }
 
     /* PLAY THE GAME! */
 
     run();
 
-})();
+});

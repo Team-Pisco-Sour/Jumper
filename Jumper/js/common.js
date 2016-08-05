@@ -21,57 +21,6 @@ let Game = {
 
 };
 
-/* CANVAS UTILITIES */
-
-Game.Canvas = {
-
-    init: function (canvas, width, height) {
-        canvas.width = width;
-        canvas.height = height;
-
-        return canvas;
-    },
-
-    create: function (width, height) {
-        return this.init(document.createElement('canvas'), width, height);
-    },    
-
-    render: function (width, height, render, canvas) {
-        canvas = canvas || this.create(width, height);
-        render(canvas.getContext('2d'), width, height);
-
-        return canvas;
-    }
-};
-
-/* ASSET LOADING UTILITIES */
-
-Game.Load = {
-
-    // load multiple images and callback when ALL images have loaded
-    images: function (names, callback) { 
-
-        let name,
-            result = {},
-            count = names.length,
-            onload = function () {
-                if (--count === 0) {
-                    callback(result);
-                }
-            };
-
-        for (let i = 0, len = names.length; i < len; i += 1) {
-            name = names[i];
-
-            result[name] = document.createElement('img');
-
-            result[name].addEventListener('load', onload);
-
-            result[name].src = "img/" + name + ".png";
-        }
-    }
-};
-
 /* MATH UTILITIES */
 
 Game.Math = {
