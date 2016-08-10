@@ -2,13 +2,13 @@
     /* 
         Legend:
             X - platform
+            o - coin
     */
     let levels = [
         {
             "name": "Level 1",
             "color": {
                 "platform": "#467911",
-                // "stroke": "#C0C0C0"
             },
             "map": [
                 "                                                                                                                                    ",
@@ -39,11 +39,11 @@
                 "                                                           X                                                                        ",
                 "             X                                                                                                                      ",
                 "                                             XX               X            X                                    X                   ",
-                "                                                        X                                        XX         X                       ",
+                "                 oo            o                        X                                        XX         X                       ",
                 "                 XX  XX      XXX   X                                                        XX                         X            ",
-                "                        XX              XXX                     X       XX     XX       XX           XXXX           X       XXXX    ",
+                "          o             XX              XXX                     X       XX     XX       XX           XXXX           X       XXXX    ",
                 "         XXX                                      X   X                X                                                            ",
-                "                                                                    XXX              X                                              ",
+                "    o                                                               XXX              X                                              ",
                 "   XXX                                                                                                                              ",
                 "  X                            XX                                                                                                   ",
                 "XX     X                                                                                                                            "

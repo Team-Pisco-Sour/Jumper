@@ -1,3 +1,4 @@
+
 /* CONSTANTS */
 
 const FRAMES_PER_SECOND = 60,                                            // 'update' frame rate fixed at 60fps independent of rendering loop
@@ -18,11 +19,13 @@ const FRAMES_PER_SECOND = 60,                                            // 'upd
     FRICTION = 1 / 8,                                                  // player take 1/8 second to stop from maxDeltaX (horizontal friction)
     IMPULSE = 1500 * FRAMES_PER_SECOND, //15 * FRAMES_PER_SECOND,                                  // player jump impulse
     FALLING_JUMP = FRAMES_PER_SECOND / 5,                              // player allowed to jump for 1/5 second after falling off a platform
+    COIN = { WIDTH: 1.5 * ROW_HEIGHT, HEIGHT: 1.5 * ROW_HEIGHT },      // logical size of Coin
     DIRECTION = { NONE: 0, LEFT: 1, RIGHT: 2 },                        // useful enum for declaring an abstract direction
     STEP = { FRAMES: 8, W: COL_WIDTH / 10, H: ROW_HEIGHT },            // attributes of player stepping up
     IMAGES = {                                                         // image file ID's
         groundImgID: 'ground',
-        playerImgID: 'player'
+        playerImgID: 'player',
+        coinImgID: 'coin'
     },
     PLAYER = {
         RIGHT: { x: 1008, y: 0, w: 72, h: 96, frames: 6, fps: 30 },    // animation - player running right
@@ -113,6 +116,7 @@ window.addEventListener('load', function () {
                 // tearDown();
 
             });
+
         let now,
             deltaTime = 0,
             last = Game.Math.timestamp(),
@@ -124,6 +128,7 @@ window.addEventListener('load', function () {
             if (isGamePaused) {
                 return;
             }
+
             now = Game.Math.timestamp();
             deltaTime = deltaTime + Math.min(1, (now - last) / 1000);
 
@@ -147,6 +152,7 @@ window.addEventListener('load', function () {
 
         frame();
     }
+
     /* PLAY THE GAME! */
 
     run();

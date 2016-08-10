@@ -6,7 +6,7 @@ let Player = {
     init: function () {
 
         this.x = col2x(0.5);                        // player x-coord
-        this.y = row2y(3);                          // player y-coord
+        this.y = row2y(1);                          // player y-coord
         this.w = PLAYER_WIDTH;
         this.h = PLAYER_HEIGHT;
         this.dx = 0;                                // deltaX (player horizontal speed (meters per second))
@@ -59,7 +59,7 @@ let Player = {
 
         if (this.input.left) {
 
-            // we fix most left point of any game level to the beginning of this level
+            // we fix the most left point of any game level to the beginning of this level
             if (this.x >= COL_WIDTH / 2) {
                 this.ddx = this.ddx - accel;
             }
@@ -128,6 +128,7 @@ let Player = {
         point.cell = playground.getCell(point.row, point.col);
         point.blocked = point.cell.platform;
         point.platform = point.cell.platform;
+        point.coin = false;
     },
 
     checkCollision: function () {

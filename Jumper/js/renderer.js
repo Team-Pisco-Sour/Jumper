@@ -1,4 +1,5 @@
-﻿/* RENDERER */
+﻿
+/* RENDERER */
 
 let Renderer = {
 
@@ -89,6 +90,8 @@ let Renderer = {
 
                 if (cell.platform)
                     this.renderPlatform(ctx, c, y);
+                else if (cell.coin)
+                    this.renderCoin(ctx, c, y);
             }
 
             c = normalizeColumn(c + direction);
@@ -108,6 +111,19 @@ let Renderer = {
         ctx.strokeRect(x1, y - ROW_HEIGHT, x2 - x1, ROW_HEIGHT);
     },
 
+    renderCoin: function (ctx, col, y) {
+
+        let coinImg = document.getElementById(IMAGES.coinImgID),
+            x = col2x(col + 0.5);
+
+        ctx.drawImage(
+            coinImg,
+            tx(x) - COIN.WIDTH / 2, // The x coordinate where to place the image on the canvas
+            y - COIN.HEIGHT,        // The y coordinate where to place the image on the canvas
+            COIN.WIDTH,             // The width of the image to use (stretch or reduce the image)
+            COIN.HEIGHT);           // The height of the image to use (stretch or reduce the image)
+    },
+
     renderPlayer: function (ctx) {
 
         let playerImg = document.getElementById(IMAGES.playerImgID);
@@ -122,7 +138,6 @@ let Renderer = {
             ty(player.ry) - player.h,
             player.w,
             player.h);
-
     },
 
     createGround: function () {

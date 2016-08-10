@@ -1,4 +1,5 @@
-﻿/* Playground */
+﻿
+/* Playground */
 
 let Playground = {
 
@@ -43,7 +44,8 @@ let Playground = {
                 let cell = source[row][col];
 
                 map[row][col] = {
-                    platform: (cell === "X")
+                    platform: (cell === "X"),
+                    coin: (cell === "o")
                 };
             }
         }
