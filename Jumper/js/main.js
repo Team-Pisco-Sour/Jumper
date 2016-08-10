@@ -108,7 +108,7 @@ window.addEventListener('load', function () {
             function (event) {
                 //TODO: show game over screen
                 console.log("Player is dead.");
-                // isGamePaused = true;
+                isGamePaused = true;
                 // showGameOverScreen();
                 // tearDown();
 
