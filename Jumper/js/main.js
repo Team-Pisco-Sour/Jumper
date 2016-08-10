@@ -47,6 +47,7 @@ window.addEventListener('load', function () {
         if (x > (playground.width / 2)) {
             x = -(playground.width - x);
         }
+
         return x;
     }
     function ty(y) { return CANVAS_HEIGHT - HORIZON_HEIGHT - (y - player.ry); }       // transform y-coord for rendering
@@ -75,8 +76,6 @@ window.addEventListener('load', function () {
             return this;
         },
 
-        //-------------------------------------------------------------------------
-
         getCell: function (row, col) {
 
             if (row < 0) {
@@ -89,8 +88,6 @@ window.addEventListener('load', function () {
 
             return this.map[row][normalizeColumn(col)];
         },
-
-        //-------------------------------------------------------------------------
 
         createMap: function (source) {
 
@@ -135,7 +132,7 @@ window.addEventListener('load', function () {
             this.stepping = DIRECTION.NONE,
             this.collision = this.createCollisionPoints();
             this.animation = PLAYER.STAND;
-
+            
             return this;
         },
 
@@ -169,10 +166,21 @@ window.addEventListener('load', function () {
             this.ddx = 0;
             this.ddy = falling ? -this.gravity : 0;
 
-            if (this.input.left)
-                this.ddx = this.ddx - accel;
-            else if (wasLeft)
+            if (this.input.left) {
+
+                // we fix most left point of any game level to the beginning of this level
+                if (this.x >= COL_WIDTH / 2) {
+                    this.ddx = this.ddx - accel;
+                }
+                else {
+                    this.x = COL_WIDTH / 2;
+                    this.dx = 0;
+                    this.ddx = 0;
+                }
+            }
+            else if (wasLeft) {
                 this.ddx = this.ddx + friction;
+            }
 
             if (this.input.right)
                 this.ddx = this.ddx + accel;
@@ -343,6 +351,7 @@ window.addEventListener('load', function () {
 
             this.stepping = direction;
             this.stepCount = STEP.FRAMES;
+
             return false; // NOT considered a collision
         },
 
@@ -380,8 +389,6 @@ window.addEventListener('load', function () {
             return this;
         },
 
-        //-------------------------------------------------------------------------
-
         render: function (deltaTime) {
 
             player.rx = normalizeX(Game.Math.lerp(player.x, player.dx, deltaTime));
@@ -398,8 +405,6 @@ window.addEventListener('load', function () {
             this.ctx.restore();
         },
 
-        //-------------------------------------------------------------------------
-
         renderGround: function (ctx) {
 
             let ground = this.ground,
@@ -415,8 +420,6 @@ window.addEventListener('load', function () {
             }
         },
 
-        //-------------------------------------------------------------------------
-
         renderBack: function (ctx) {
 
             ctx.strokeStyle = playground.color.stroke;
@@ -428,8 +431,6 @@ window.addEventListener('load', function () {
             this.renderQuadrant(ctx, normalizeColumn(left - 3), left, +1);
             this.renderQuadrant(ctx, normalizeColumn(right + 3), right, -1);
         },
-
-        //-------------------------------------------------------------------------
 
         renderFront: function (ctx) {
 
@@ -444,8 +445,6 @@ window.addEventListener('load', function () {
             this.renderQuadrant(ctx, right, normalizeColumn(center - 1), -1);
 
         },
-
-        //-------------------------------------------------------------------------
 
         renderQuadrant: function (ctx, min, max, direction) {
 
@@ -469,8 +468,6 @@ window.addEventListener('load', function () {
             }
         },
 
-        //-------------------------------------------------------------------------
-
         renderPlatform: function (ctx, col, y) {
 
             let x = col2x(col + 0.5),
@@ -483,8 +480,6 @@ window.addEventListener('load', function () {
             ctx.lineWidth = 1;
             ctx.strokeRect(x1, y - ROW_HEIGHT, x2 - x1, ROW_HEIGHT);
         },
-
-        //-------------------------------------------------------------------------
 
         renderPlayer: function (ctx) {
 
@@ -502,8 +497,6 @@ window.addEventListener('load', function () {
                 player.h);
 
         },
-
-        //-------------------------------------------------------------------------
 
         createGround: function () {
 
