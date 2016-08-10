@@ -43,7 +43,7 @@
                 "    X                              X                                                                                                ",
                 "                        XX                  XXX                 X                   XX               XXXX                   XX      ",
                 "         XXX                                      X                                                                                 ",
-                "                                                                        X            X                                              ",
+                "                   XX                                                   X            X                                              ",
                 "   XXX                                                                                                                              ",
                 "  X                                                                                                                                 ",
                 "XX     X                                                                                                                            "

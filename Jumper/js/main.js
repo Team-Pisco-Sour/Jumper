@@ -106,9 +106,11 @@ window.addEventListener('load', function () {
 
         document.addEventListener('onPlayerDeath',
             function (event) {
-                //TODO: Stop game logic and show game over screen
-                console.log("Player dead");
+                //TODO: show game over screen
+                console.log("Player is dead.");
                 isGamePaused = true;
+                // showGameOverScreen();
+                // tearDown();
 
             });
         let now,
@@ -145,7 +147,6 @@ window.addEventListener('load', function () {
 
         frame();
     }
-
     /* PLAY THE GAME! */
 
     run();
