@@ -55,7 +55,8 @@ function nearRowSurface(y, row) {                                               
 
 let playground,
     player,
-    renderer;
+    renderer,
+    isGamePaused = false;
 
 window.addEventListener('load', function () {
 
@@ -103,6 +104,13 @@ window.addEventListener('load', function () {
             return onkey(event, event.keyCode, false);
         }, false);
 
+        document.addEventListener('onPlayerDeath',
+            function (event) {
+                //TODO: Stop game logic and show game over screen
+                console.log("Player dead");
+                isGamePaused = true;
+
+            });
         let now,
             deltaTime = 0,
             last = Game.Math.timestamp(),
@@ -111,7 +119,9 @@ window.addEventListener('load', function () {
         //===== Game Loop =====//
 
         function frame() {
-
+            if (isGamePaused) {
+                return;
+            }
             now = Game.Math.timestamp();
             deltaTime = deltaTime + Math.min(1, (now - last) / 1000);
 

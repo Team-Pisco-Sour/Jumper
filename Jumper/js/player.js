@@ -6,7 +6,7 @@ let Player = {
     init: function () {
 
         this.x = col2x(0.5);                        // player x-coord
-        this.y = row2y(0);                          // player y-coord
+        this.y = row2y(1);                          // player y-coord
         this.w = PLAYER_WIDTH;
         this.h = PLAYER_HEIGHT;
         this.dx = 0;                                // deltaX (player horizontal speed (meters per second))
@@ -22,6 +22,7 @@ let Player = {
         this.stepping = DIRECTION.NONE,
         this.collision = this.createCollisionPoints();
         this.animation = PLAYER.STAND;
+        this.playerDead = new Event('onPlayerDeath');
 
         return this;
     },
@@ -223,6 +224,11 @@ let Player = {
     collideDown: function (point) {
 
         this.y = row2y(point.row + 1);
+
+        if (this.y <= 0) {
+            document.dispatchEvent(this.playerDead);
+        }
+
         this.dy = 0;
         this.falling = false;
 
