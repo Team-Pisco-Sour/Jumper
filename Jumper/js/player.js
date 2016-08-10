@@ -6,7 +6,7 @@ let Player = {
     init: function () {
 
         this.x = col2x(0.5);                        // player x-coord
-        this.y = row2y(1);                          // player y-coord
+        this.y = row2y(3);                          // player y-coord
         this.w = PLAYER_WIDTH;
         this.h = PLAYER_HEIGHT;
         this.dx = 0;                                // deltaX (player horizontal speed (meters per second))

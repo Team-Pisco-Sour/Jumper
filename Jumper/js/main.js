@@ -3,7 +3,7 @@
 const FRAMES_PER_SECOND = 60,                                            // 'update' frame rate fixed at 60fps independent of rendering loop
     CANVAS_WIDTH = 720,                                                // may have various width
     CANVAS_HEIGHT = 540,                                               // ... and 4:3 width:height ratio
-    HORIZON_HEIGHT = CANVAS_HEIGHT / 5,                                // how much ground to show below the playground
+    HORIZON_HEIGHT = CANVAS_HEIGHT / 3,                                // how much ground to show below the playground
     PIXELS_IN_METER = CANVAS_HEIGHT / 20,                              // how many pixels represent 1 meter
     COL_WIDTH = PIXELS_IN_METER * 3,                                   // 2D column width
     ROW_HEIGHT = PIXELS_IN_METER,                                      // 2D row height
@@ -11,12 +11,12 @@ const FRAMES_PER_SECOND = 60,                                            // 'upd
     PLAYER_WIDTH = PIXELS_IN_METER * 1.5,                              // player logical width
     PLAYER_HEIGHT = PIXELS_IN_METER * 2,                               // player logical height
     GROUND_SPEED = 2,                                                  // how fast ground scrolls left-right
-    GRAVITY = 9.8 * 1.5,                                               // gravity
+    GRAVITY = 9.8 * 3.5,//1.5,                                               // gravity
     MAX_DELTA_X = 10,                                                  // player max horizontal speed (meters per second)
     MAX_DELTA_Y = (ROW_SURFACE * FRAMES_PER_SECOND / PIXELS_IN_METER), // player max vertical speed (meters per second) - ENSURES CANNOT FALL THROUGH PLATFORM SURFACE
     ACCELERATION = 1 / 4,                                              // player take 1/4 second to reach maxDeltaX (horizontal acceleration)
     FRICTION = 1 / 8,                                                  // player take 1/8 second to stop from maxDeltaX (horizontal friction)
-    IMPULSE = 15 * FRAMES_PER_SECOND,                                  // player jump impulse
+    IMPULSE = 1500 * FRAMES_PER_SECOND, //15 * FRAMES_PER_SECOND,                                  // player jump impulse
     FALLING_JUMP = FRAMES_PER_SECOND / 5,                              // player allowed to jump for 1/5 second after falling off a platform
     DIRECTION = { NONE: 0, LEFT: 1, RIGHT: 2 },                        // useful enum for declaring an abstract direction
     STEP = { FRAMES: 8, W: COL_WIDTH / 10, H: ROW_HEIGHT },            // attributes of player stepping up
@@ -108,7 +108,7 @@ window.addEventListener('load', function () {
             function (event) {
                 //TODO: show game over screen
                 console.log("Player is dead.");
-                isGamePaused = true;
+                // isGamePaused = true;
                 // showGameOverScreen();
                 // tearDown();
 
