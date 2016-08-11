@@ -22,7 +22,14 @@ let Player = {
         this.stepping = DIRECTION.NONE,
         this.collision = this.createCollisionPoints();
         this.animation = PLAYER.STAND;
-        this.playerDead = new Event('onPlayerDeath');
+
+        // Debugging in VisualStudio works only with Internet Explorer but
+        // IE supports only the old-fashioned way of custom events creating
+        this.playerDead = document.createEvent('Event'); 
+        this.playerDead.initEvent('onPlayerDeath', true, true);
+        //this.playerDead = new Event('onPlayerDeath');
+
+        this.score = 0;
 
         return this;
     },
@@ -131,6 +138,21 @@ let Player = {
         point.platform = point.cell.platform;
         point.turret = point.bottomNeighbourCell.turret || point.cell.turret;
         point.coin = false;
+
+        if (point.cell.coin) {
+
+            // center point of column +/- COIN.WIDTH/2
+            if (Game.Math.between(
+                    this.x + point.x,
+                    col2x(point.col + 0.5) - COIN.WIDTH / 2,
+                    col2x(point.col + 0.5) + COIN.WIDTH / 2)
+                && Game.Math.between(
+                    this.y + point.y,
+                    row2y(point.row),
+                    row2y(point.row + 1))) {
+                point.coin = true;
+            }
+        }
     },
 
     checkCollision: function () {
@@ -157,6 +179,13 @@ let Player = {
         this.updateCollisionPoint(br);
         this.updateCollisionPoint(ul);
         this.updateCollisionPoint(ur);
+
+        if (tl.coin) return this.collectCoin(tl);
+        else if (tr.coin) return this.collectCoin(tr);
+        else if (ml.coin) return this.collectCoin(ml);
+        else if (mr.coin) return this.collectCoin(mr);
+        else if (bl.coin) return this.collectCoin(bl);
+        else if (br.coin) return this.collectCoin(br);
 
         if (fallingDown && bl.blocked && !ml.blocked && !tl.blocked && nearRowSurface(this.y + bl.y, bl.row))
             return this.collideDown(bl);
@@ -200,6 +229,11 @@ let Player = {
             return this.startFalling(true);
 
         return false; // done, we didn't collide with anything
+    },
+
+    collectCoin: function (point) {
+        point.cell.coin = false;
+        this.score = this.score + COIN.AMOUNT;
     },
 
     startFalling: function (allowFallingJump) {

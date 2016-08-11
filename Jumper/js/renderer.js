@@ -12,6 +12,8 @@ let Renderer = {
         this.ctx = this.canvas.getContext('2d');
 
         this.ground = this.createGround();
+        this.score = document.getElementById('score');
+        this.visualized_score = 0;
         this.platformWidth = COL_WIDTH;
 
         return this;
@@ -30,6 +32,7 @@ let Renderer = {
         this.renderFront(this.ctx);
         this.renderGround(this.ctx);
         this.renderPlayer(this.ctx);
+        this.renderScore(this.ctx);
         this.ctx.restore();
     },
 
@@ -153,6 +156,17 @@ let Renderer = {
             ty(player.ry) - player.h,
             player.w,
             player.h);
+    },
+
+    renderScore: function (ctx) {
+    
+        if (player.score > this.visualized_score) {
+    
+            // smooth score increase
+            this.visualized_score = this.visualized_score + 1;
+
+            score.innerHTML = this.visualized_score;
+        }
     },
 
     createGround: function () {
