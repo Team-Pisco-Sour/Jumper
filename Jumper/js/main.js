@@ -38,25 +38,25 @@ const FRAMES_PER_SECOND = 60,                                          // 'updat
     GAME_OVER_TEXT = "Game over! You died!";
 
 /* UTILITY METHODS */
-function normalizeX(x) {
+function normalizeX(x) {                                            // wrap x-coord around to stay within playground boundary
     return Game.Math.normalize(x, 0, playground.width);
-}         // wrap x-coord around to stay within playground boundary
-function normalizeColumn(col) {
+}
+function normalizeColumn(col) {                                     // wrap column  around to stay within playground boundary
     return Game.Math.normalize(col, 0, playground.cols);
-} // wrap column  around to stay within playground boundary
-function x2col(x) {
+}
+function x2col(x) {                                                 // convert x-coord to playground column index
     return Math.floor(normalizeX(x) / COL_WIDTH);
-}                    // convert x-coord to playground column index
-function y2row(y) {
+}
+function y2row(y) {                                                 // convert y-coord to playground row index
     return Math.floor(y / ROW_HEIGHT);
-}                               // convert y-coord to playground row index
-function col2x(col) {
+}
+function col2x(col) {                                               // convert playground column index to x-coord
     return col * COL_WIDTH;
-}                                        // convert playground column index to x-coord
-function row2y(row) {
+}
+function row2y(row) {                                               // convert playground row index to y-coord
     return row * ROW_HEIGHT;
-}                                       // convert playground row index to y-coord
-function tx(x) {                                                                       // transform x-coord for rendering
+}
+function tx(x) {                                                    // transform x-coord for rendering
     x = normalizeX(x - player.rx);
     if (x > (playground.width / 2)) {
         x = -(playground.width - x);
@@ -64,10 +64,10 @@ function tx(x) {                                                                
 
     return x;
 }
-function ty(y) {
+function ty(y) {                                                    // transform y-coord for rendering
     return CANVAS_HEIGHT - HORIZON_HEIGHT - (y - player.ry);
-}       // transform y-coord for rendering
-function nearRowSurface(y, row) {                                                 // is y-coord "near" the surface of a playground row
+}
+function nearRowSurface(y, row) {                                   // is y-coord "near" the surface of a playground row
     return y > (row2y(row + 1) - ROW_SURFACE);
 }
 
@@ -80,7 +80,10 @@ let playground,
     buttonClose,
     buttonInstructions,
     buttonPlayAgain,
-    level = 0;
+    level = 0,
+    playerScore = 0,
+    nextLevelAudio,
+    mainThemeAudio;
 
 window.addEventListener('load', function () {
 
@@ -91,6 +94,10 @@ window.addEventListener('load', function () {
     buttonClose = document.getElementById("close");
     buttonInstructions = document.getElementById("instructions-btn");
     buttonPlayAgain = document.getElementById('play-again');
+
+    nextLevelAudio = new Audio('./resources/audio/next-level.mp3');
+    mainThemeAudio = new Audio('./resources/audio/main-theme_32.mp3');
+    mainThemeAudio.play();
 
     button.onclick = function () {
         var div = document.getElementById('new-game');
@@ -167,13 +174,12 @@ window.addEventListener('load', function () {
     // GAME OVER
     function showGameOverScreen(text) {
         // TODO: any score?
-        document.getElementById('result').innerText = 'Scores: ';
+        document.getElementById('result').innerText = 'Score: ' + playerScore;
         document.getElementById('game-over').style.display = 'block';
         document.getElementById('game-over-overlay').style.display = 'block';
         if (text) {
             document.getElementById("p1").innerHTML = text;
         }
-        // isGamePaused = true;
     }
 
     function reset() {
@@ -188,6 +194,7 @@ window.addEventListener('load', function () {
 
     function gotoNextLevel() {
         level++;
+        nextLevelAudio.play();
         run();
     }
 
@@ -230,14 +237,13 @@ window.addEventListener('load', function () {
                 // UPDATE
                 player.update(oneFrameTime);
             }
-            if (x2col(player.x) > playground.cols - COLUMNS_FROM_END_OF_LEVEL) {
-                gotoNextLevel();
-            }
             // RENDER
             renderer.render(deltaTime);
 
             last = now;
-
+            if (x2col(player.x) > playground.cols - COLUMNS_FROM_END_OF_LEVEL) {
+                gotoNextLevel();
+            }
             requestAnimationFrame(frame);
         }
 
@@ -245,9 +251,4 @@ window.addEventListener('load', function () {
 
         frame();
     }
-
-
-    // run();
-
-
 });
