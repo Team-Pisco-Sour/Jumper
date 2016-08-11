@@ -97,7 +97,11 @@ body {
 }
 
 #new-game p a {
-    color: green;
+    color: #008000;
+    font-size: 1.3em;
+}
+#new-game p a:hover {
+    color: #fff;
     font-size: 1.3em;
 }
 

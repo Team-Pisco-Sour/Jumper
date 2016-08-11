@@ -148,6 +148,7 @@ window.addEventListener('load', function () {
     document.addEventListener('onPlayerDeath',
         function (event) {
             isGamePaused = true;
+            totalPlayerScore = player.score;
             showGameOverScreen(GAME_OVER_TEXT);
         });
 
@@ -186,7 +187,6 @@ window.addEventListener('load', function () {
 
     // GAME OVER
     function showGameOverScreen(text) {
-        // TODO: any score?
         document.getElementById('result').innerText = 'Score: ' + totalPlayerScore;
         document.getElementById('game-over').style.display = 'block';
         document.getElementById('game-over-overlay').style.display = 'block';
