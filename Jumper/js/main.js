@@ -22,7 +22,7 @@ const FRAMES_PER_SECOND = 60,                                          // 'updat
     TURRET = {WIDTH: COL_WIDTH / 2, HEIGHT: 1.75 * ROW_HEIGHT},        // turret size
     DIRECTION = {NONE: 0, LEFT: 1, RIGHT: 2},                          // useful enum for declaring an abstract direction
     STEP = {FRAMES: 8, W: COL_WIDTH / 10, H: ROW_HEIGHT},              // attributes of player stepping up
-    COLUMNS_FROM_END_OF_LEVEL = 5,                                     // the distance in columns where player is considered to have reached end of level
+    COLUMNS_FROM_END_OF_LEVEL = 3,                                     // the distance in columns where player is considered to have reached end of level
     IMAGES = {                                                         // image file ID's
         groundImgID: 'ground',
         playerImgID: 'player',
@@ -82,8 +82,8 @@ let playground,
     buttonPlayAgain,
     level = 0,
     playerScore = 0,
-    nextLevelAudio,
-    mainThemeAudio;
+    nextLevelAudio = new Audio('./resources/audio/next-level.mp3'),
+    mainThemeAudio = new Audio('./resources/audio/main-theme_32.mp3');
 
 window.addEventListener('load', function () {
 
@@ -94,9 +94,11 @@ window.addEventListener('load', function () {
     buttonClose = document.getElementById("close");
     buttonInstructions = document.getElementById("instructions-btn");
     buttonPlayAgain = document.getElementById('play-again');
-
-    nextLevelAudio = new Audio('./resources/audio/next-level.mp3');
-    mainThemeAudio = new Audio('./resources/audio/main-theme_32.mp3');
+    //Loop audio
+    mainThemeAudio.addEventListener('ended', function() {
+        this.currentTime = 0;
+        this.play();
+    }, false);
     mainThemeAudio.play();
 
     button.onclick = function () {
@@ -128,10 +130,7 @@ window.addEventListener('load', function () {
         }
     }, false);
 
-    buttonPlayAgain.addEventListener('click', function () {
-        reset();
-    });
-
+    buttonPlayAgain.addEventListener('click', reset);
 
     document.addEventListener('keydown', function (event) {
         return onkey(event, event.keyCode, true);
@@ -211,8 +210,8 @@ window.addEventListener('load', function () {
         }
 
         // SETUP
-        playground = Object.create(Playground).init(levelData);
         player = Object.create(Player).init();
+        playground = Object.create(Playground).init(levelData);
         renderer = Object.create(Renderer).init();
 
         let now,
