@@ -1,4 +1,3 @@
-
 /* CONSTANTS */
 
 const FRAMES_PER_SECOND = 60,                                            // 'update' frame rate fixed at 60fps independent of rendering loop
@@ -19,10 +18,10 @@ const FRAMES_PER_SECOND = 60,                                            // 'upd
     FRICTION = 1 / 8,                                                  // player take 1/8 second to stop from maxDeltaX (horizontal friction)
     IMPULSE = 1500 * FRAMES_PER_SECOND, //15 * FRAMES_PER_SECOND,                                  // player jump impulse
     FALLING_JUMP = FRAMES_PER_SECOND / 5,                              // player allowed to jump for 1/5 second after falling off a platform
-    COIN = { WIDTH: 1.5 * ROW_HEIGHT, HEIGHT: 1.5 * ROW_HEIGHT },      // logical size of Coin
-    TURRET = {WIDTH: COL_WIDTH / 2, HEIGHT: 1.75 * ROW_HEIGHT}         // turret size
-    DIRECTION = { NONE: 0, LEFT: 1, RIGHT: 2 },                        // useful enum for declaring an abstract direction
-    STEP = { FRAMES: 8, W: COL_WIDTH / 10, H: ROW_HEIGHT },            // attributes of player stepping up
+    COIN = {WIDTH: 1.5 * ROW_HEIGHT, HEIGHT: 1.5 * ROW_HEIGHT},      // logical size of Coin
+    TURRET = {WIDTH: COL_WIDTH / 2, HEIGHT: 1.75 * ROW_HEIGHT},         // turret size
+    DIRECTION = {NONE: 0, LEFT: 1, RIGHT: 2},                        // useful enum for declaring an abstract direction
+    STEP = {FRAMES: 8, W: COL_WIDTH / 10, H: ROW_HEIGHT},            // attributes of player stepping up
     IMAGES = {                                                         // image file ID's
         groundImgID: 'ground',
         playerImgID: 'player',
@@ -30,21 +29,32 @@ const FRAMES_PER_SECOND = 60,                                            // 'upd
         turretImgID: 'turret'
     },
     PLAYER = {
-        RIGHT: { x: 1008, y: 0, w: 72, h: 96, frames: 6, fps: 30 },    // animation - player running right
-        STAND: { x: 1008, y: 0, w: 72, h: 96, frames: 1, fps: 30 },    // animation - player standing still
-        LEFT: { x: 576, y: 0, w: 72, h: 96, frames: 6, fps: 30 }       // animation - player running left
+        RIGHT: {x: 1008, y: 0, w: 72, h: 96, frames: 6, fps: 30},    // animation - player running right
+        STAND: {x: 1008, y: 0, w: 72, h: 96, frames: 1, fps: 30},    // animation - player standing still
+        LEFT: {x: 576, y: 0, w: 72, h: 96, frames: 6, fps: 30}       // animation - player running left
     };
 
 /* UTILITY METHODS */
 
 
-
-function normalizeX(x) { return Game.Math.normalize(x, 0, playground.width); }         // wrap x-coord around to stay within playground boundary
-function normalizeColumn(col) { return Game.Math.normalize(col, 0, playground.cols); } // wrap column  around to stay within playground boundary
-function x2col(x) { return Math.floor(normalizeX(x) / COL_WIDTH); }                    // convert x-coord to playground column index
-function y2row(y) { return Math.floor(y / ROW_HEIGHT); }                               // convert y-coord to playground row index
-function col2x(col) { return col * COL_WIDTH; }                                        // convert playground column index to x-coord
-function row2y(row) { return row * ROW_HEIGHT; }                                       // convert playground row index to y-coord
+function normalizeX(x) {
+    return Game.Math.normalize(x, 0, playground.width);
+}         // wrap x-coord around to stay within playground boundary
+function normalizeColumn(col) {
+    return Game.Math.normalize(col, 0, playground.cols);
+} // wrap column  around to stay within playground boundary
+function x2col(x) {
+    return Math.floor(normalizeX(x) / COL_WIDTH);
+}                    // convert x-coord to playground column index
+function y2row(y) {
+    return Math.floor(y / ROW_HEIGHT);
+}                               // convert y-coord to playground row index
+function col2x(col) {
+    return col * COL_WIDTH;
+}                                        // convert playground column index to x-coord
+function row2y(row) {
+    return row * ROW_HEIGHT;
+}                                       // convert playground row index to y-coord
 function tx(x) {                                                                       // transform x-coord for rendering
     x = normalizeX(x - player.rx);
     if (x > (playground.width / 2)) {
@@ -53,7 +63,9 @@ function tx(x) {                                                                
 
     return x;
 }
-function ty(y) { return CANVAS_HEIGHT - HORIZON_HEIGHT - (y - player.ry); }       // transform y-coord for rendering
+function ty(y) {
+    return CANVAS_HEIGHT - HORIZON_HEIGHT - (y - player.ry);
+}       // transform y-coord for rendering
 function nearRowSurface(y, row) {                                                 // is y-coord "near" the surface of a playground row
     return y > (row2y(row + 1) - ROW_SURFACE);
 }
@@ -64,17 +76,23 @@ let playground,
     player,
     renderer,
     isGamePaused = false,
-    button = document.getElementById('hide'),
-    buttonClose = document.getElementById("close"),
-    buttonInstructions = document.getElementById("instructions-btn");
+    button,
+    buttonClose,
+    buttonInstructions,
+    buttonPlayAgain,
+    level = 0;
 
 window.addEventListener('load', function () {
 
     'use strict';
 
     /* GAME - SETUP/UPDATE/RENDER */
+    button = document.getElementById('hide');
+    buttonClose = document.getElementById("close");
+    buttonInstructions = document.getElementById("instructions-btn");
+    buttonPlayAgain = document.getElementById('play-again');
 
-    button.onclick = function() {
+    button.onclick = function () {
         var div = document.getElementById('new-game');
         var divInstructions = document.getElementById('instructions');
         if (div.style.display !== 'none') {
@@ -85,28 +103,52 @@ window.addEventListener('load', function () {
         else {
             div.style.display = 'block';
             isGamePaused = true;
-            var timeOut = setTimeout(showGameOverScreen,0);
+            setTimeout(showGameOverScreen, 0);
         }
     };
 
     buttonClose.addEventListener('click', function () {
         var div = document.getElementById('instructions');
-        if(div.style.zIndex == '6') {
+        if (div.style.zIndex == '6') {
             div.style.zIndex = '4';
         }
     }, false);
 
     buttonInstructions.addEventListener('click', function () {
-        console.log('buttonInstructions');
+        // console.log('buttonInstructions');
         var div = document.getElementById('instructions');
-        if(div.style.zIndex <= '5') {
+        if (div.style.zIndex <= '5') {
             div.style.zIndex = '6';
         }
     }, false);
 
+    buttonPlayAgain.addEventListener('click', function () {
+        reset();
+    });
+
+
+    document.addEventListener('keydown', function (event) {
+        return onkey(event, event.keyCode, true);
+    }, false);
+
+    document.addEventListener('keyup', function (event) {
+        return onkey(event, event.keyCode, false);
+    }, false);
+
+    document.addEventListener('onPlayerDeath',
+        function (event) {
+            //TODO: show game over screen
+            isGamePaused = true;
+            showGameOverScreen();
+            // tearDown();
+
+        });
+    /* START THE GAME! */
+    run();
+
     function onkey(event, key, pressed) {
 
-        let KEY = { SPACE: 32, LEFT: 37, RIGHT: 39 }; // input key codes
+        let KEY = {SPACE: 32, LEFT: 37, RIGHT: 39}; // input key codes
 
         switch (key) {
 
@@ -126,33 +168,38 @@ window.addEventListener('load', function () {
         }
     }
 
+    // GAME OVER
+    function showGameOverScreen() {
+        // any score?
+        document.getElementById('result').innerText = 'Scores: ';
+        document.getElementById('game-over').style.display = 'block';
+        document.getElementById('game-over-overlay').style.display = 'block';
+        isGamePaused = true;
+
+    }
+
+    function reset() {
+        document.getElementById('game-over').style.display = 'none';
+        document.getElementById('game-over-overlay').style.display = 'none';
+        isGamePaused = false;
+        document.getElementById("p1").innerHTML = "GAME OVER!";
+
+        level = 0;
+        run();
+    }
+    function gotoNextLevel() {
+        level++;
+        run();
+    }
     function run() {
 
-        let level = 0,
-            levelData = window.getLevelData(level);
+        let levelData = window.getLevelData(level);
 
         // SETUP
         playground = Object.create(Playground).init(levelData);
         player = Object.create(Player).init();
         renderer = Object.create(Renderer).init();
 
-        document.addEventListener('keydown', function (event) {
-            return onkey(event, event.keyCode, true);
-        }, false);
-
-        document.addEventListener('keyup', function (event) {
-            return onkey(event, event.keyCode, false);
-        }, false);
-
-        document.addEventListener('onPlayerDeath',
-            function (event) {
-                //TODO: show game over screen
-                console.log("Player is dead.");
-                isGamePaused = true;
-                showGameOverScreen();
-                // tearDown();
-
-            });
 
         let now,
             deltaTime = 0,
@@ -163,7 +210,8 @@ window.addEventListener('load', function () {
 
         function frame() {
             if (isGamePaused) {
-                var timeOut = setTimeout(showGameOverScreen,0);
+                return;
+                // var timeOut = setTimeout(showGameOverScreen, 0);
             }
 
             now = Game.Math.timestamp();
@@ -175,25 +223,6 @@ window.addEventListener('load', function () {
 
                 // UPDATE
                 player.update(oneFrameTime);
-            }
-
-            // GAME OVER
-            function showGameOverScreen() {
-                // any score?
-                document.getElementById('result').innerText = 'Scores: ';
-                document.getElementById('game-over').style.display = 'block';
-                document.getElementById('game-over-overlay').style.display = 'block';
-                isGamePaused = true;
-                document.getElementById('play-again').addEventListener('click', function() {
-                    reset();
-                });
-            }
-
-            function reset() {
-                document.getElementById('game-over').style.display = 'none';
-                document.getElementById('game-over-overlay').style.display = 'none';
-                isGamePaused = false;
-                document.getElementById("p1").innerHTML = "GAME OVER!";
             }
 
             // RENDER
@@ -209,9 +238,8 @@ window.addEventListener('load', function () {
         frame();
     }
 
-    /* PLAY THE GAME! */
 
-    run();
+    // run();
 
 
 });
