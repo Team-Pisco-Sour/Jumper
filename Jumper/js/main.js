@@ -25,7 +25,7 @@ const FRAMES_PER_SECOND = 60,                                          // 'updat
         HEIGHT: 1.5 * ROW_HEIGHT,
         AMOUNT: 50
     },
-    TURRET = {WIDTH: COL_WIDTH , HEIGHT: 2 * ROW_HEIGHT},            // turret size
+    TURRET = {WIDTH: COL_WIDTH, HEIGHT: 2 * ROW_HEIGHT},            // turret size
     DIRECTION = {NONE: 0, LEFT: 1, RIGHT: 2},                        // useful enum for declaring an abstract direction
     IMAGES = {                                                         // image file ID's
         groundImgID: 'ground',
@@ -86,7 +86,6 @@ let playground,
     buttonInstructions,
     buttonPlayAgain,
     level = 0,
-    playerScore = 0,
     nextLevelAudio = new Audio('./resources/audio/next-level.mp3'),
     mainThemeAudio = new Audio('./resources/audio/main-theme_32.mp3');
 
@@ -208,7 +207,12 @@ window.addEventListener('load', function () {
         }
         catch (ex) {
             isGamePaused = true;
-            showGameOverScreen(VICTORY_TEXT);
+            if (level >= 0) {
+                showGameOverScreen(VICTORY_TEXT);
+            }
+            else {
+                throw ex;
+            }
             return;
         }
 
