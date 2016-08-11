@@ -272,7 +272,10 @@ window.addEventListener('load', function () {
         // SETUP
         player = Object.create(Player).init();
         playground = Object.create(Playground).init(levelData);
-        renderer = Object.create(Renderer).init();
+
+        if (!renderer) {
+            renderer = Object.create(Renderer).init();
+        }
 
         frameCounter = 0;
         score.innerHTML = totalPlayerScore;
