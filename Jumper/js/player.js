@@ -130,7 +130,7 @@ let Player = {
         point.col = x2col(this.x + point.x);
         point.cell = playground.getCell(point.row, point.col);
         point.bottomNeighbourCell = playground.getCell(point.row - 1, point.col);
-        point.blocked = point.cell.platform || point.cell.spikes ;
+        point.blocked = point.cell.platform || point.cell.spikes;
         point.platform = point.cell.platform;
         point.spikes = point.cell.spikes;
         point.coin = false;
@@ -210,10 +210,10 @@ let Player = {
         if (runningRight && br.blocked && !bl.blocked) {
             if (falling)
                 return this.collide(br);
-            else if (br.spikes)
-                document.dispatchEvent(this.playerDead);              
-            else
+            else if (!br.spikes)
                 return this.startSteppingUp(DIRECTION.RIGHT);
+            else
+                return this.collide(br);
         }
 
         if (runningLeft && tl.blocked && !tr.blocked)
@@ -225,10 +225,10 @@ let Player = {
         if (runningLeft && bl.blocked && !br.blocked) {
             if (falling)
                 return this.collide(bl, true);
-            else if (bl.spikes)
-                document.dispatchEvent(this.playerDead);
-            else
+            else if (!bl.spikes)
                 return this.startSteppingUp(DIRECTION.LEFT);
+            else
+                return this.collide(bl);
         }
 
         if (!falling && !ul.blocked && !ur.blocked)
