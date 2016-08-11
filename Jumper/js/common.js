@@ -51,5 +51,17 @@ Game.Math = {
         }
 
         return n;
+    },
+
+    random: function (min, max) {
+        return (min + (Math.random() * (max - min)));
+    },
+
+    randomInt: function (min, max) {
+        return Math.round(this.random(min, max));
+    },
+
+    randomChoice: function (choices) {
+        return choices[this.randomInt(0, choices.length - 1)];
     }
 };

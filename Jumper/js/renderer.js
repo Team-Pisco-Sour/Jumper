@@ -11,6 +11,7 @@ let Renderer = {
 
         this.ctx = this.canvas.getContext('2d');
 
+        this.stars = this.createStars();
         this.ground = this.createGround();
         this.score = document.getElementById('score');
         this.visualized_score = 0;
@@ -27,6 +28,7 @@ let Renderer = {
         player.ry = Math.max(0, player.ry); // don't let sub-frame interpolation take the player below the horizon
 
         this.ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+        this.renderStars(this.ctx);
         this.ctx.save();
         this.ctx.translate(CANVAS_WIDTH / 2, 0);
         this.renderFront(this.ctx);
@@ -34,6 +36,11 @@ let Renderer = {
         this.renderPlayer(this.ctx);
         this.renderScore(this.ctx);
         this.ctx.restore();
+    },
+
+    renderStars: function (ctx) {
+
+        ctx.drawImage(this.stars, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
     },
 
     renderGround: function (ctx) {
@@ -160,27 +167,40 @@ let Renderer = {
 
     renderScore: function (ctx) {
 
-        // Added little optimisations
-
-        if (player.score === this.visualized_score) {
-            if (player.score === 0) {
-                score.innerHTML = 0;
-                return;
-            }
-            return;
-        }
         if (player.score > this.visualized_score) {
     
             // smooth score increase
             this.visualized_score += 1;
+            score.innerHTML = this.visualized_score;
         }
-        else {
-            //needed when resetting score(onPlayerDeath)
-            this.visualized_score -= 2;
+    },
+
+    createStars: function () {
+
+        let starsCanvas = document.createElement('canvas');
+
+        starsCanvas.width = CANVAS_WIDTH;
+        starsCanvas.height = CANVAS_HEIGHT;
+
+        let ctx = starsCanvas.getContext('2d'),
+            x, y, radius,
+            max = 500,
+            colors = ["#FFFFFF", "#FFFFFF", "#FFFFFF", "#FFFFFF", "#FFFFFF", "#FFFFFF", "#FFFFFF", "#FFFFFF", "#FFFFFF"],
+            radius_lengths = [0.3, 0.3, 0.3, 0.4, 0.4, 0.4, 0.5, 0.5, 0.5, 0.6, 0.6, 0.7, 0.7, 0.8, 0.9, 1, 1.1, 1.2, 1.3];
+
+        for (let n = 0; n < max; n++) {
+
+            x = Game.Math.randomInt(2, CANVAS_WIDTH - 4);
+            y = Game.Math.randomInt(2, CANVAS_HEIGHT - 4);
+            radius = Game.Math.randomChoice(radius_lengths);
+
+            ctx.beginPath();
+            ctx.arc(x, y, radius, 0, 2 * Math.PI);
+            ctx.fillStyle = Game.Math.randomChoice(colors);
+            ctx.fill();
         }
 
-        score.innerHTML = this.visualized_score;
-
+        return starsCanvas;
     },
 
     createGround: function () {

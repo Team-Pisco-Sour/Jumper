@@ -224,6 +224,8 @@ window.addEventListener('load', function () {
         playground = Object.create(Playground).init(levelData);
         renderer = Object.create(Renderer).init();
 
+        score.innerHTML = 0;
+
         let now,
             deltaTime = 0,
             last = Game.Math.timestamp(),
