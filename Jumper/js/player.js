@@ -22,7 +22,6 @@ let Player = {
             this.collision = this.createCollisionPoints();
         this.animation = PLAYER.STAND;
         this.playerDead = new Event('onPlayerDeath');
-        this.playerNextLevel = new Event('onPlayerReachedEndOfLevel');
 
         return this;
     },
