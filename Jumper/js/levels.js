@@ -3,6 +3,7 @@
         Legend:
             X - platform
             o - coin
+            ^ - turret
     */
     let levels = [
         {
@@ -40,12 +41,12 @@
                 "             X                                                                                                                      ",
                 "                                             XX               X            X                                    X                   ",
                 "                 oo            o                        X                                        XX         X                       ",
-                "                 XX  XX      XXX   X                                                        XX                         X            ",
-                "          o             XX              XXX                     X       XX     XX       XX           XXXX           X       XXXX    ",
+                "                 XX  XX  ^   XXX   X                                                        XX                         X            ",
+                "          o^            XX              XXX                     X       XX     XX       XX           XXXX           X       XXXX    ",
                 "         XXX                                      X   X                X                                                            ",
-                "    o                                                               XXX              X                                              ",
-                "   XXX                                                                                                                              ",
-                "  X                            XX                                                                                                   ",
+                "    o^                                                               XXX              X                                              ",
+                "  ^XXX                         ^                                                                                                    ",
+                "  X    ^                       XX                                                                                                   ",
                 "XX     X                                                                                                                            "
             ]                                                                                                                                        
         }                                                                                                                                            

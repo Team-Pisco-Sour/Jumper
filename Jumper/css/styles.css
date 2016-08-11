@@ -127,8 +127,7 @@ li#money > span {
     background: url("../resources/gold_coin.png");
     width: 64px;
     height: 64px;
-    background-position:  0px -128px;
-    /*margin-left: 10px;*/
+    background-position: 0px -128px;
 }
 
 a {
@@ -151,7 +150,7 @@ a {
 
 #game-over-overlay {
     background-color: black;
-    opacity: .5;
+    opacity: .8;
 }
 
 #game-over {
@@ -173,6 +172,12 @@ a {
     font-size: 1.5em;
     cursor: pointer;
     border-radius: 6px;
+    background-color: green;
+    color: white;
+    border: 1px solid transparent;
+    margin-top: 100px;
+    width: 250px;
+    height: 75px;
 }
 
 #game-over button:hover {

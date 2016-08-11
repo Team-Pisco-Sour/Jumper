@@ -92,6 +92,8 @@ let Renderer = {
                     this.renderPlatform(ctx, c, y);
                 else if (cell.coin)
                     this.renderCoin(ctx, c, y);
+                else if (cell.turret)
+                    this.renderTurret(ctx, c, y);
             }
 
             c = normalizeColumn(c + direction);
@@ -122,6 +124,19 @@ let Renderer = {
             y - COIN.HEIGHT,        // The y coordinate where to place the image on the canvas
             COIN.WIDTH,             // The width of the image to use (stretch or reduce the image)
             COIN.HEIGHT);           // The height of the image to use (stretch or reduce the image)
+    },
+
+    renderTurret: function (ctx, col, y) {
+
+        let turretImg = document.getElementById(IMAGES.turretImgID),
+            x = col2x(col + 0.51);
+
+        ctx.drawImage(
+            turretImg,
+            tx(x) - TURRET.WIDTH / 2,
+            y - TURRET.HEIGHT,
+            TURRET.WIDTH,
+            TURRET.HEIGHT)
     },
 
     renderPlayer: function (ctx) {

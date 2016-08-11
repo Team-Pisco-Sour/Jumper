@@ -20,12 +20,14 @@ const FRAMES_PER_SECOND = 60,                                            // 'upd
     IMPULSE = 1500 * FRAMES_PER_SECOND, //15 * FRAMES_PER_SECOND,                                  // player jump impulse
     FALLING_JUMP = FRAMES_PER_SECOND / 5,                              // player allowed to jump for 1/5 second after falling off a platform
     COIN = { WIDTH: 1.5 * ROW_HEIGHT, HEIGHT: 1.5 * ROW_HEIGHT },      // logical size of Coin
+    TURRET = {WIDTH: COL_WIDTH / 2, HEIGHT: 1.75 * ROW_HEIGHT}         // turret size
     DIRECTION = { NONE: 0, LEFT: 1, RIGHT: 2 },                        // useful enum for declaring an abstract direction
     STEP = { FRAMES: 8, W: COL_WIDTH / 10, H: ROW_HEIGHT },            // attributes of player stepping up
     IMAGES = {                                                         // image file ID's
         groundImgID: 'ground',
         playerImgID: 'player',
-        coinImgID: 'coin'
+        coinImgID: 'coin',
+        turretImgID: 'turret'
     },
     PLAYER = {
         RIGHT: { x: 1008, y: 0, w: 72, h: 96, frames: 6, fps: 30 },    // animation - player running right
