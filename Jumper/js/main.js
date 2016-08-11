@@ -224,7 +224,9 @@ window.addEventListener('load', function () {
                 // UPDATE
                 player.update(oneFrameTime);
             }
-
+            if(x2col(player.x) > playground.cols - 5) {
+                gotoNextLevel();
+            }
             // RENDER
             renderer.render(deltaTime);
 

@@ -1,5 +1,4 @@
-﻿
-/* PLAYER */
+﻿/* PLAYER */
 
 let Player = {
 
@@ -17,12 +16,13 @@ let Player = {
         this.impulse = PIXELS_IN_METER * IMPULSE;   // player jump impulse
         this.accel = this.maxdX / ACCELERATION;     // player horizontal acceleration
         this.friction = this.maxdX / FRICTION;      // player horizontal friction
-        this.input = { left: false, right: false, jump: false, jumpAvailable: true };
+        this.input = {left: false, right: false, jump: false, jumpAvailable: true};
         this.falling = false;
         this.stepping = DIRECTION.NONE,
-        this.collision = this.createCollisionPoints();
+            this.collision = this.createCollisionPoints();
         this.animation = PLAYER.STAND;
         this.playerDead = new Event('onPlayerDeath');
+        this.playerNextLevel = new Event('onPlayerReachedEndOfLevel');
 
         return this;
     },
@@ -30,14 +30,14 @@ let Player = {
     createCollisionPoints: function () {
 
         return {
-            topLeft: { x: -this.w / 4, y: this.h - 2 },
-            topRight: { x: this.w / 4, y: this.h - 2 },
-            middleLeft: { x: -this.w / 2, y: this.h / 2 },
-            middleRight: { x: this.w / 2, y: this.h / 2 },
-            bottomLeft: { x: -this.w / 4, y: 0 },
-            bottomRight: { x: this.w / 4, y: 0 },
-            underLeft: { x: -this.w / 4, y: -1 },
-            underRight: { x: this.w / 4, y: -1 }
+            topLeft: {x: -this.w / 4, y: this.h - 2},
+            topRight: {x: this.w / 4, y: this.h - 2},
+            middleLeft: {x: -this.w / 2, y: this.h / 2},
+            middleRight: {x: this.w / 2, y: this.h / 2},
+            bottomLeft: {x: -this.w / 4, y: 0},
+            bottomRight: {x: this.w / 4, y: 0},
+            underLeft: {x: -this.w / 4, y: -1},
+            underRight: {x: this.w / 4, y: -1}
         };
     },
 
