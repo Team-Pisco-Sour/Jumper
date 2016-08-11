@@ -159,14 +159,28 @@ let Renderer = {
     },
 
     renderScore: function (ctx) {
-    
+
+        // Added little optimisations
+
+        if (player.score === this.visualized_score) {
+            if (player.score === 0) {
+                score.innerHTML = 0;
+                return;
+            }
+            return;
+        }
         if (player.score > this.visualized_score) {
     
             // smooth score increase
-            this.visualized_score = this.visualized_score + 1;
-
-            score.innerHTML = this.visualized_score;
+            this.visualized_score += 1;
         }
+        else {
+            //needed when resetting score(onPlayerDeath)
+            this.visualized_score -= 2;
+        }
+
+        score.innerHTML = this.visualized_score;
+
     },
 
     createGround: function () {

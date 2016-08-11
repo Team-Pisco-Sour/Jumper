@@ -133,7 +133,7 @@ window.addEventListener('load', function () {
     // GAME OVER
     function showGameOverScreen() {
         // any score?
-        document.getElementById('result').innerText = 'Scores: ';
+        document.getElementById('result').innerText = 'Scores: ' + player.score;
         document.getElementById('game-over').style.display = 'block';
         document.getElementById('game-over-overlay').style.display = 'block';
         isGamePaused = true;
@@ -146,6 +146,7 @@ window.addEventListener('load', function () {
         document.getElementById('game-over').style.display = 'none';
         document.getElementById('game-over-overlay').style.display = 'none';
         isGamePaused = false;
+        player.score = 0;
         document.getElementById("p1").innerHTML = "GAME OVER!";
     }
 
