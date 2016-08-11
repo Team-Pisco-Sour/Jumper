@@ -15,6 +15,27 @@ body {
     height: 384px;
 }
 
+#score-display {
+    position: absolute;
+    top: 0.15em;
+    left: 0.15em;
+    width: 10em;
+    background-color: #000000;
+    opacity: 0.75;
+    border: 2px solid black;
+}
+
+#score-display img {
+    width: 4em;
+    height: 4em;
+}
+
+#score {
+    color: #c0c0c0;
+    font-size: 2em;
+    font-family: 'Arial', cursive;
+}
+
 #canvas {
     display: inline-block;
     margin: 0 auto;
