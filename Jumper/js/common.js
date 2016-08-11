@@ -37,6 +37,10 @@ Game.Math = {
         return Math.max(min, Math.min(max, x));
     },
 
+    between: function (n, min, max) {
+        return ((n >= min) && (n <= max));
+    },
+
     normalize: function (n, min, max) {
         while (n < min) {
             n += (max - min);

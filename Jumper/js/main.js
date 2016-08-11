@@ -1,7 +1,7 @@
 
 /* CONSTANTS */
 
-const FRAMES_PER_SECOND = 60,                                            // 'update' frame rate fixed at 60fps independent of rendering loop
+const FRAMES_PER_SECOND = 60,                                          // 'update' frame rate fixed at 60fps independent of rendering loop
     CANVAS_WIDTH = 720,                                                // may have various width
     CANVAS_HEIGHT = 540,                                               // ... and 4:3 width:height ratio
     HORIZON_HEIGHT = CANVAS_HEIGHT / 3,                                // how much ground to show below the playground
@@ -19,7 +19,11 @@ const FRAMES_PER_SECOND = 60,                                            // 'upd
     FRICTION = 1 / 8,                                                  // player take 1/8 second to stop from maxDeltaX (horizontal friction)
     IMPULSE = 1500 * FRAMES_PER_SECOND, //15 * FRAMES_PER_SECOND,                                  // player jump impulse
     FALLING_JUMP = FRAMES_PER_SECOND / 5,                              // player allowed to jump for 1/5 second after falling off a platform
-    COIN = { WIDTH: 1.5 * ROW_HEIGHT, HEIGHT: 1.5 * ROW_HEIGHT },      // logical size of Coin
+    COIN = {                                                           // coin properties
+        WIDTH: 1.5 * ROW_HEIGHT,
+        HEIGHT: 1.5 * ROW_HEIGHT,
+        AMOUNT: 50
+    },
     TURRET = {WIDTH: COL_WIDTH / 2, HEIGHT: 1.75 * ROW_HEIGHT}         // turret size
     DIRECTION = { NONE: 0, LEFT: 1, RIGHT: 2 },                        // useful enum for declaring an abstract direction
     STEP = { FRAMES: 8, W: COL_WIDTH / 10, H: ROW_HEIGHT },            // attributes of player stepping up
@@ -126,6 +130,25 @@ window.addEventListener('load', function () {
         }
     }
 
+    // GAME OVER
+    function showGameOverScreen() {
+        // any score?
+        document.getElementById('result').innerText = 'Scores: ';
+        document.getElementById('game-over').style.display = 'block';
+        document.getElementById('game-over-overlay').style.display = 'block';
+        isGamePaused = true;
+        document.getElementById('play-again').addEventListener('click', function () {
+            reset();
+        });
+    }
+
+    function reset() {
+        document.getElementById('game-over').style.display = 'none';
+        document.getElementById('game-over-overlay').style.display = 'none';
+        isGamePaused = false;
+        document.getElementById("p1").innerHTML = "GAME OVER!";
+    }
+
     function run() {
 
         let level = 0,
@@ -175,25 +198,6 @@ window.addEventListener('load', function () {
 
                 // UPDATE
                 player.update(oneFrameTime);
-            }
-
-            // GAME OVER
-            function showGameOverScreen() {
-                // any score?
-                document.getElementById('result').innerText = 'Scores: ';
-                document.getElementById('game-over').style.display = 'block';
-                document.getElementById('game-over-overlay').style.display = 'block';
-                isGamePaused = true;
-                document.getElementById('play-again').addEventListener('click', function() {
-                    reset();
-                });
-            }
-
-            function reset() {
-                document.getElementById('game-over').style.display = 'none';
-                document.getElementById('game-over-overlay').style.display = 'none';
-                isGamePaused = false;
-                document.getElementById("p1").innerHTML = "GAME OVER!";
             }
 
             // RENDER
