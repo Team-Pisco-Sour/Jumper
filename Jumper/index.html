@@ -34,8 +34,13 @@
         <div id="game-over">
             <h1 id="p1">GAME OVER!</h1>
             <p id="result"></p>
+            <label>Please enter your name:</label>
+            <input type="text" class="player-name" id="player-score-name"/>
+            <button id="save-score">Save Score</button>
             <button id="play-again">Play Again</button>
         </div>
+
+
 
         <div id="score-display">
             <table>
@@ -52,7 +57,14 @@
         <img class="non-displayed-images" src="./img/gold_coin_sprite.png" id="coin" />
         <img class="non-displayed-images" src="./img/spikes.png" id="spikes" />
     </div>
+    <div id="leaderboard-scores">
+        <h1>Scores</h1>
+        <ul id="actual-scores"></ul>
 
+        
+    </div>
+
+    <script type="text/javascript" src="./js/advancedLocalStorage.js"></script>
     <script type="text/javascript" src="./js/levels.js"></script>
     <script type="text/javascript" src="./js/common.js"></script>
     <script type="text/javascript" src="./js/main.js"></script>

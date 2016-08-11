@@ -83,6 +83,7 @@ let playground,
     buttonClose,
     buttonInstructions,
     buttonPlayAgain,
+    buttonSaveScore,
     level = 0,
     nextLevelAudio = new Audio('./resources/audio/next-level.mp3'),
     mainThemeAudio = new Audio('./resources/audio/main-theme_32.mp3'),
@@ -99,6 +100,7 @@ window.addEventListener('load', function () {
     buttonClose = document.getElementById("close");
     buttonInstructions = document.getElementById("instructions-btn");
     buttonPlayAgain = document.getElementById('play-again');
+    buttonSaveScore = document.getElementById('save-score');
     //Loop audio
     mainThemeAudio.addEventListener('ended', function () {
         this.currentTime = 0;
@@ -137,6 +139,8 @@ window.addEventListener('load', function () {
 
     buttonPlayAgain.addEventListener('click', reset);
 
+    buttonSaveScore.addEventListener('click', saveScore);
+
     document.addEventListener('keydown', function (event) {
         return onkey(event, event.keyCode, true);
     }, false);
@@ -152,10 +156,56 @@ window.addEventListener('load', function () {
             showGameOverScreen(GAME_OVER_TEXT);
         });
 
+    function saveScore() {
+
+        var input = document.getElementById("player-score-name");
+        var name = input.value;
+
+        var playerScores = getObjectFromLocalStorage();
+        if (!playerScores) {
+            playerScores = [];
+        }
+
+        playerScores.push({ "name": name, "playerScore": totalPlayerScore });
+
+        playerScores.sort(function (a, b) {
+            return parseInt(b.playerScore) - parseInt(a.playerScore);
+        });
+
+        //display score
+        var scoreBoard = document.getElementById("leaderboard-scores");
+
+        var scoresHolder = document.getElementById("actual-scores");
+        scoresHolder.innerHTML = "";
+
+        for (var i = 0; i < playerScores.length; i++) {
+            var boldItem = false;
+            if (playerScores[i]["name"]==name) {
+                boldItem = true;
+            }
+            var currentScore = document.createElement("li");
+            currentScore.innerText = playerScores[i]["name"] + ":" + playerScores[i]["playerScore"];
+
+            if (boldItem) {
+                currentScore.className = "focused";
+                
+            }
+            scoresHolder.appendChild(currentScore);
+        }
+
+        scoreBoard.style.display = "block";
+
+
+        setObjectToLocalStorage(playerScores);
+
+       
+    }
 
     function reset() {
         document.getElementById('game-over').style.display = 'none';
         document.getElementById('game-over-overlay').style.display = 'none';
+        document.getElementById("leaderboard-scores").style.display = 'none';
+        document.getElementById("player-score-name").value = "";
         isGamePaused = false;
         document.getElementById("p1").innerHTML = "GAME OVER!";
         player.score = 0;

@@ -253,3 +253,46 @@ a {
         font-size: 15pt;
     }
 }
+
+
+/*Leaderboard styles*/
+
+#leaderboard-scores{
+    padding:10px;
+    display:none;
+
+    position:fixed;
+    top:10px;
+    left:10px;
+    width:200px;
+    height:200px;
+    overflow-y:auto;
+    border:1px solid white;
+
+    background-color: black;
+    opacity: .8;
+}
+
+.focused{
+    font-weight:bold;
+    font-size:1.5em;
+    color:green!important;
+}
+#leaderboard-scores h1{
+    margin:0;
+    font-size:3em;
+    color: green;
+
+}
+
+#actual-scores{
+    padding-left:10px;
+}
+
+#actual-scores li
+{
+    list-style:none;
+    color:white;
+    
+}
+/*Leaderboard styles*/
