@@ -228,10 +228,10 @@ let Player = {
             else if (!bl.spikes)
                 return this.startSteppingUp(DIRECTION.LEFT);
             else
-                return this.collide(bl);
+                return this.collide(bl, true);
         }
 
-        if (!falling && !ul.blocked && !ur.blocked)
+        if (!falling && ((!ul.blocked && !ur.blocked) || (ur.spikes || ul.spikes)))
             return this.startFalling(true);
 
         return false; // done, we didn't collide with anything
