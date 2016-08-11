@@ -1,11 +1,10 @@
-﻿
-/* PLAYER */
+﻿/* PLAYER */
 
 let Player = {
 
     init: function () {
 
-        this.x = col2x(0.5);                        // player x-coord
+        this.x = col2x(1.5);                        // player x-coord
         this.y = row2y(1);                          // player y-coord
         this.w = PLAYER_WIDTH;
         this.h = PLAYER_HEIGHT;
@@ -17,17 +16,14 @@ let Player = {
         this.impulse = PIXELS_IN_METER * IMPULSE;   // player jump impulse
         this.accel = this.maxdX / ACCELERATION;     // player horizontal acceleration
         this.friction = this.maxdX / FRICTION;      // player horizontal friction
-        this.input = { left: false, right: false, jump: false, jumpAvailable: true };
+        this.input = {left: false, right: false, jump: false, jumpAvailable: true};
         this.falling = false;
-        this.stepping = DIRECTION.NONE,
+        this.stepping = DIRECTION.NONE;
         this.collision = this.createCollisionPoints();
         this.animation = PLAYER.STAND;
 
-        // Debugging in VisualStudio works only with Internet Explorer but
-        // IE supports only the old-fashioned way of custom events creating
-        this.playerDead = document.createEvent('Event'); 
+        this.playerDead = document.createEvent('Event');
         this.playerDead.initEvent('onPlayerDeath', true, true);
-        //this.playerDead = new Event('onPlayerDeath');
 
         this.score = 0;
 
@@ -37,14 +33,14 @@ let Player = {
     createCollisionPoints: function () {
 
         return {
-            topLeft: { x: -this.w / 4, y: this.h - 2 },
-            topRight: { x: this.w / 4, y: this.h - 2 },
-            middleLeft: { x: -this.w / 2, y: this.h / 2 },
-            middleRight: { x: this.w / 2, y: this.h / 2 },
-            bottomLeft: { x: -this.w / 4, y: 0 },
-            bottomRight: { x: this.w / 4, y: 0 },
-            underLeft: { x: -this.w / 4, y: -1 },
-            underRight: { x: this.w / 4, y: -1 }
+            topLeft: {x: -this.w / 4, y: this.h - 2},
+            topRight: {x: this.w / 4, y: this.h - 2},
+            middleLeft: {x: -this.w / 2, y: this.h / 2},
+            middleRight: {x: this.w / 2, y: this.h / 2},
+            bottomLeft: {x: -this.w / 4, y: 0},
+            bottomRight: {x: this.w / 4, y: 0},
+            underLeft: {x: -this.w / 4, y: -1},
+            underRight: {x: this.w / 4, y: -1}
         };
     },
 

@@ -1,4 +1,3 @@
-
 /* CONSTANTS */
 
 const FRAMES_PER_SECOND = 60,                                          // 'update' frame rate fixed at 60fps independent of rendering loop
@@ -12,21 +11,23 @@ const FRAMES_PER_SECOND = 60,                                          // 'updat
     PLAYER_WIDTH = PIXELS_IN_METER * 1.5,                              // player logical width
     PLAYER_HEIGHT = PIXELS_IN_METER * 2,                               // player logical height
     GROUND_SPEED = 2,                                                  // how fast ground scrolls left-right
-    GRAVITY = 9.8 * 3.5,//1.5,                                               // gravity
+    GRAVITY = 9.8 * 3.5,//1.5,                                         // gravity
     MAX_DELTA_X = 10,                                                  // player max horizontal speed (meters per second)
     MAX_DELTA_Y = (ROW_SURFACE * FRAMES_PER_SECOND / PIXELS_IN_METER), // player max vertical speed (meters per second) - ENSURES CANNOT FALL THROUGH PLATFORM SURFACE
     ACCELERATION = 1 / 4,                                              // player take 1/4 second to reach maxDeltaX (horizontal acceleration)
     FRICTION = 1 / 8,                                                  // player take 1/8 second to stop from maxDeltaX (horizontal friction)
-    IMPULSE = 1500 * FRAMES_PER_SECOND, //15 * FRAMES_PER_SECOND,                                  // player jump impulse
+    IMPULSE = 1500 * FRAMES_PER_SECOND,                                // player jump impulse
     FALLING_JUMP = FRAMES_PER_SECOND / 5,                              // player allowed to jump for 1/5 second after falling off a platform
+    STEP = {FRAMES: 8, W: COL_WIDTH / 10, H: ROW_HEIGHT},              // attributes of player stepping up
+// the distance in columns where player is considered to have reached end of level
     COIN = {                                                           // coin properties
         WIDTH: 1.5 * ROW_HEIGHT,
         HEIGHT: 1.5 * ROW_HEIGHT,
         AMOUNT: 50
     },
-    TURRET = {WIDTH: COL_WIDTH, HEIGHT: 2 * ROW_HEIGHT}         // turret size
-    DIRECTION = { NONE: 0, LEFT: 1, RIGHT: 2 },                        // useful enum for declaring an abstract direction
-    STEP = { FRAMES: 8, W: COL_WIDTH / 10, H: ROW_HEIGHT },            // attributes of player stepping up
+    TURRET = {WIDTH: COL_WIDTH, HEIGHT: 2 * ROW_HEIGHT},            // turret size
+    DIRECTION = {NONE: 0, LEFT: 1, RIGHT: 2},                        // useful enum for declaring an abstract direction
+
     IMAGES = {                                                         // image file ID's
         groundImgID: 'ground',
         playerImgID: 'player',
@@ -34,22 +35,34 @@ const FRAMES_PER_SECOND = 60,                                          // 'updat
         turretImgID: 'turret'
     },
     PLAYER = {
-        RIGHT: { x: 1008, y: 0, w: 72, h: 96, frames: 6, fps: 30 },    // animation - player running right
-        STAND: { x: 1008, y: 0, w: 72, h: 96, frames: 1, fps: 30 },    // animation - player standing still
-        LEFT: { x: 576, y: 0, w: 72, h: 96, frames: 6, fps: 30 }       // animation - player running left
-    };
+        RIGHT: {x: 1008, y: 0, w: 72, h: 96, frames: 6, fps: 30},    // animation - player running right
+        STAND: {x: 1008, y: 0, w: 72, h: 96, frames: 1, fps: 30},    // animation - player standing still
+        LEFT: {x: 576, y: 0, w: 72, h: 96, frames: 6, fps: 30}       // animation - player running left
+    },
+    COLUMNS_FROM_END_OF_LEVEL = 3,
+    VICTORY_TEXT = "Victory!",
+    GAME_OVER_TEXT = "Game over! You died!";
 
 /* UTILITY METHODS */
-
-
-
-function normalizeX(x) { return Game.Math.normalize(x, 0, playground.width); }         // wrap x-coord around to stay within playground boundary
-function normalizeColumn(col) { return Game.Math.normalize(col, 0, playground.cols); } // wrap column  around to stay within playground boundary
-function x2col(x) { return Math.floor(normalizeX(x) / COL_WIDTH); }                    // convert x-coord to playground column index
-function y2row(y) { return Math.floor(y / ROW_HEIGHT); }                               // convert y-coord to playground row index
-function col2x(col) { return col * COL_WIDTH; }                                        // convert playground column index to x-coord
-function row2y(row) { return row * ROW_HEIGHT; }                                       // convert playground row index to y-coord
-function tx(x) {                                                                       // transform x-coord for rendering
+function normalizeX(x) {                                            // wrap x-coord around to stay within playground boundary
+    return Game.Math.normalize(x, 0, playground.width);
+}
+function normalizeColumn(col) {                                     // wrap column  around to stay within playground boundary
+    return Game.Math.normalize(col, 0, playground.cols);
+}
+function x2col(x) {                                                 // convert x-coord to playground column index
+    return Math.floor(normalizeX(x) / COL_WIDTH);
+}
+function y2row(y) {                                                 // convert y-coord to playground row index
+    return Math.floor(y / ROW_HEIGHT);
+}
+function col2x(col) {                                               // convert playground column index to x-coord
+    return col * COL_WIDTH;
+}
+function row2y(row) {                                               // convert playground row index to y-coord
+    return row * ROW_HEIGHT;
+}
+function tx(x) {                                                    // transform x-coord for rendering
     x = normalizeX(x - player.rx);
     if (x > (playground.width / 2)) {
         x = -(playground.width - x);
@@ -57,28 +70,43 @@ function tx(x) {                                                                
 
     return x;
 }
-function ty(y) { return CANVAS_HEIGHT - HORIZON_HEIGHT - (y - player.ry); }       // transform y-coord for rendering
-function nearRowSurface(y, row) {                                                 // is y-coord "near" the surface of a playground row
+function ty(y) {                                                    // transform y-coord for rendering
+    return CANVAS_HEIGHT - HORIZON_HEIGHT - (y - player.ry);
+}
+function nearRowSurface(y, row) {                                   // is y-coord "near" the surface of a playground row
     return y > (row2y(row + 1) - ROW_SURFACE);
 }
 
 /* GLOBAL VARIABLES */
-
 let playground,
     player,
     renderer,
     isGamePaused = false,
-    button = document.getElementById('hide'),
-    buttonClose = document.getElementById("close"),
-    buttonInstructions = document.getElementById("instructions-btn");
+    button,
+    buttonClose,
+    buttonInstructions,
+    buttonPlayAgain,
+    level = 0,
+    nextLevelAudio = new Audio('./resources/audio/next-level.mp3'),
+    mainThemeAudio = new Audio('./resources/audio/main-theme_32.mp3');
 
 window.addEventListener('load', function () {
 
     'use strict';
 
     /* GAME - SETUP/UPDATE/RENDER */
+    button = document.getElementById('hide');
+    buttonClose = document.getElementById("close");
+    buttonInstructions = document.getElementById("instructions-btn");
+    buttonPlayAgain = document.getElementById('play-again');
+    //Loop audio
+    mainThemeAudio.addEventListener('ended', function () {
+        this.currentTime = 0;
+        this.play();
+    }, false);
+    mainThemeAudio.play();
 
-    button.onclick = function() {
+    button.onclick = function () {
         var div = document.getElementById('new-game');
         var divInstructions = document.getElementById('instructions');
         if (div.style.display !== 'none') {
@@ -89,31 +117,56 @@ window.addEventListener('load', function () {
         else {
             div.style.display = 'block';
             isGamePaused = true;
-            var timeOut = setTimeout(showGameOverScreen,0);
+            showGameOverScreen(GAME_OVER_TEXT)
         }
     };
 
     buttonClose.addEventListener('click', function () {
         var div = document.getElementById('instructions');
-        if(div.style.zIndex == '6') {
+        if (div.style.zIndex == '6') {
             div.style.zIndex = '4';
         }
     }, false);
 
     buttonInstructions.addEventListener('click', function () {
-        console.log('buttonInstructions');
         var div = document.getElementById('instructions');
-        if(div.style.zIndex <= '5') {
+        if (div.style.zIndex <= '5') {
             div.style.zIndex = '6';
         }
     }, false);
 
+    buttonPlayAgain.addEventListener('click', reset);
+
+    document.addEventListener('keydown', function (event) {
+        return onkey(event, event.keyCode, true);
+    }, false);
+
+    document.addEventListener('keyup', function (event) {
+        return onkey(event, event.keyCode, false);
+    }, false);
+
+    document.addEventListener('onPlayerDeath',
+        function (event) {
+            isGamePaused = true;
+            showGameOverScreen(GAME_OVER_TEXT);
+        });
+
+
+    function reset() {
+        document.getElementById('game-over').style.display = 'none';
+        document.getElementById('game-over-overlay').style.display = 'none';
+        isGamePaused = false;
+        document.getElementById("p1").innerHTML = "GAME OVER!";
+        player.score = 0;
+        level = 0;
+        run();
+    }
+
     function onkey(event, key, pressed) {
 
-        let KEY = { SPACE: 32, LEFT: 37, RIGHT: 39 }; // input key codes
+        let KEY = {SPACE: 32, LEFT: 37, RIGHT: 39}; // input key codes
 
         switch (key) {
-
             case KEY.LEFT:
                 player.input.left = pressed;
                 event.preventDefault();
@@ -122,8 +175,8 @@ window.addEventListener('load', function () {
                 player.input.right = pressed;
                 event.preventDefault();
                 return false;
-
             case KEY.SPACE:
+                event.preventDefault();
                 player.input.jump = pressed && player.input.jumpAvailable;
                 player.input.jumpAvailable = !pressed;
                 break;
@@ -131,52 +184,43 @@ window.addEventListener('load', function () {
     }
 
     // GAME OVER
-    function showGameOverScreen() {
-        // any score?
-        document.getElementById('result').innerText = 'Scores: ' + player.score;
+    function showGameOverScreen(text) {
+        // TODO: any score?
+        document.getElementById('result').innerText = 'Score: ' + player.score;
         document.getElementById('game-over').style.display = 'block';
         document.getElementById('game-over-overlay').style.display = 'block';
-        isGamePaused = true;
-        document.getElementById('play-again').addEventListener('click', function () {
-            reset();
-        });
+        if (text) {
+            document.getElementById("p1").innerHTML = text;
+        }
     }
 
-    function reset() {
-        document.getElementById('game-over').style.display = 'none';
-        document.getElementById('game-over-overlay').style.display = 'none';
-        isGamePaused = false;
-        player.score = 0;
-        document.getElementById("p1").innerHTML = "GAME OVER!";
+    function gotoNextLevel() {
+        level++;
+        nextLevelAudio.play();
+        run();
     }
 
     function run() {
 
-        let level = 0,
+        let levelData;
+        try {
             levelData = window.getLevelData(level);
+        }
+        catch (ex) {
+            isGamePaused = true;
+            if (level >= 0) {
+                showGameOverScreen(VICTORY_TEXT);
+            }
+            else {
+                throw ex;
+            }
+            return;
+        }
 
         // SETUP
-        playground = Object.create(Playground).init(levelData);
         player = Object.create(Player).init();
+        playground = Object.create(Playground).init(levelData);
         renderer = Object.create(Renderer).init();
-
-        document.addEventListener('keydown', function (event) {
-            return onkey(event, event.keyCode, true);
-        }, false);
-
-        document.addEventListener('keyup', function (event) {
-            return onkey(event, event.keyCode, false);
-        }, false);
-
-        document.addEventListener('onPlayerDeath',
-            function (event) {
-                //TODO: show game over screen
-                console.log("Player is dead.");
-                isGamePaused = true;
-                showGameOverScreen();
-                // tearDown();
-
-            });
 
         let now,
             deltaTime = 0,
@@ -187,7 +231,7 @@ window.addEventListener('load', function () {
 
         function frame() {
             if (isGamePaused) {
-                var timeOut = setTimeout(showGameOverScreen,0);
+                return;
             }
 
             now = Game.Math.timestamp();
@@ -200,12 +244,13 @@ window.addEventListener('load', function () {
                 // UPDATE
                 player.update(oneFrameTime);
             }
-
             // RENDER
             renderer.render(deltaTime);
 
             last = now;
-
+            if (x2col(player.x) > playground.cols - COLUMNS_FROM_END_OF_LEVEL) {
+                gotoNextLevel();
+            }
             requestAnimationFrame(frame);
         }
 
@@ -214,9 +259,6 @@ window.addEventListener('load', function () {
         frame();
     }
 
-    /* PLAY THE GAME! */
-
+    /* START THE GAME! */
     run();
-
-
 });
