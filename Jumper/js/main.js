@@ -88,6 +88,7 @@ let playground,
     level = 0,
     nextLevelAudio = new Audio('./resources/audio/next-level.mp3'),
     mainThemeAudio = new Audio('./resources/audio/main-theme_32.mp3'),
+    coinSound = new Audio('./resources/audio/coin.mp3')
     totalPlayerScore = 0;
 
 window.addEventListener('load', function () {

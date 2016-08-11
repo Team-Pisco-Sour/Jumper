@@ -228,6 +228,11 @@ let Player = {
     },
 
     collectCoin: function (point) {
+
+        if (!coinSound.paused)
+            coinSound.load();
+        coinSound.play()
+
         point.cell.coin = false;
         this.score = this.score + COIN.AMOUNT;
     },
