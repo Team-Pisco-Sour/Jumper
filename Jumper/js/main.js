@@ -24,13 +24,13 @@ const FRAMES_PER_SECOND = 60,                                          // 'updat
         HEIGHT: 1.5 * ROW_HEIGHT,
         AMOUNT: 50
     },
-    TURRET = {WIDTH: COL_WIDTH, HEIGHT: 2 * ROW_HEIGHT},               // turret size
+    SPIKES = {WIDTH: COL_WIDTH, HEIGHT: ROW_HEIGHT},               // spikes size
     DIRECTION = {NONE: 0, LEFT: 1, RIGHT: 2},                          // useful enum for declaring an abstract direction
     IMAGES = {                                                         // image file ID's
         groundImgID: 'ground',
         playerImgID: 'player',
         coinImgID: 'coin',
-        turretImgID: 'turret'
+        spikesImgID: 'spikes'
     },
     PLAYER = {
         RIGHT: {x: 1008, y: 0, w: 72, h: 96, frames: 6, fps: 30},    // animation - player running right

@@ -43,7 +43,7 @@ let Playground = {
                 map[row][col] = {
                     platform: (cell === "X"),
                     coin: (cell === "o"),
-                    turret: (cell == "^")
+                    spikes: (cell == "^")
                 };
             }
         }

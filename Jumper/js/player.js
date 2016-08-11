@@ -130,9 +130,9 @@ let Player = {
         point.col = x2col(this.x + point.x);
         point.cell = playground.getCell(point.row, point.col);
         point.bottomNeighbourCell = playground.getCell(point.row - 1, point.col);
-        point.blocked = point.cell.platform || point.cell.turret || point.bottomNeighbourCell.turret ;
+        point.blocked = point.cell.platform || point.cell.spikes ;
         point.platform = point.cell.platform;
-        point.turret = point.bottomNeighbourCell.turret || point.cell.turret;
+        point.spikes = point.cell.spikes;
         point.coin = false;
 
         if (point.cell.coin) {
@@ -184,10 +184,16 @@ let Player = {
         else if (br.coin) return this.collectCoin(br);
 
         if (fallingDown && bl.blocked && !ml.blocked && !tl.blocked && nearRowSurface(this.y + bl.y, bl.row))
-            return this.collideDown(bl);
+            if (bl.spikes)
+                document.dispatchEvent(this.playerDead);
+            else
+                return this.collideDown(bl);
 
         if (fallingDown && br.blocked && !mr.blocked && !tr.blocked && nearRowSurface(this.y + br.y, br.row))
-            return this.collideDown(br);
+            if (br.spikes)
+                document.dispatchEvent(this.playerDead);
+            else
+                return this.collideDown(br);
 
         if (fallingUp && tl.blocked && !ml.blocked && !bl.blocked)
             return this.collideUp(tl);
@@ -204,6 +210,8 @@ let Player = {
         if (runningRight && br.blocked && !bl.blocked) {
             if (falling)
                 return this.collide(br);
+            else if (br.spikes)
+                document.dispatchEvent(this.playerDead);              
             else
                 return this.startSteppingUp(DIRECTION.RIGHT);
         }
@@ -217,6 +225,8 @@ let Player = {
         if (runningLeft && bl.blocked && !br.blocked) {
             if (falling)
                 return this.collide(bl, true);
+            else if (bl.spikes)
+                document.dispatchEvent(this.playerDead);
             else
                 return this.startSteppingUp(DIRECTION.LEFT);
         }

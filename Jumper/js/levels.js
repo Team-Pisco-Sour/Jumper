@@ -3,7 +3,7 @@
      Legend:
      X - platform
      o - coin
-     ^ - turret
+     ^ - spikes
      */
     let levels = [
         {
@@ -23,7 +23,7 @@
                 "X   o    XXX                                      X   X                X                                                            ",
                 "X    ^                                                               XXX              X                                             ",
                 "X ^XXX                         ^                                                                                                    ",
-                "X X    ^                       XX                                                                                                   ",
+                "X X                            XX                                                                                                   ",
                 "XX     X                                                                                                                            "
             ]
         },

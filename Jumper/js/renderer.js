@@ -102,8 +102,8 @@ let Renderer = {
                     this.renderPlatform(ctx, c, y);
                 else if (cell.coin)
                     this.renderCoin(ctx, c, y);
-                else if (cell.turret)
-                    this.renderTurret(ctx, c, y);
+                else if (cell.spikes)
+                    this.renderSpikes(ctx, c, y);
             }
 
             c = normalizeColumn(c + direction);
@@ -136,17 +136,17 @@ let Renderer = {
             COIN.HEIGHT);           // The height of the image to use (stretch or reduce the image)
     },
 
-    renderTurret: function (ctx, col, y) {
+    renderSpikes: function (ctx, col, y) {
 
-        let turretImg = document.getElementById(IMAGES.turretImgID),
-            x = col2x(col + 0.51);
+        let spikesImg = document.getElementById(IMAGES.spikesImgID),
+            x = col2x(col + 0.5);
 
         ctx.drawImage(
-            turretImg,
-            tx(x) - TURRET.WIDTH / 2,
-            y - TURRET.HEIGHT,
-            TURRET.WIDTH,
-            TURRET.HEIGHT)
+            spikesImg,
+            tx(x) - SPIKES.WIDTH / 2,
+            y - SPIKES.HEIGHT,
+            SPIKES.WIDTH,
+            SPIKES.HEIGHT)
     },
 
     renderPlayer: function (ctx) {
