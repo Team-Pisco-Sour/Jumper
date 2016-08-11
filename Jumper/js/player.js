@@ -132,8 +132,11 @@ let Player = {
         point.row = y2row(this.y + point.y);
         point.col = x2col(this.x + point.x);
         point.cell = playground.getCell(point.row, point.col);
-        point.blocked = point.cell.platform;
+        // point.blocked = point.cell.platform;
+        point.bottomNeighbourCell = playground.getCell(point.row - 1, point.col);
+        point.blocked = point.cell.platform || point.cell.turret || point.bottomNeighbourCell.turret ;
         point.platform = point.cell.platform;
+        point.turret = point.bottomNeighbourCell.turret || point.cell.turret;
         point.coin = false;
 
         if (point.cell.coin) {
