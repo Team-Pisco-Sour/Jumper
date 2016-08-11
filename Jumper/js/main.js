@@ -35,6 +35,8 @@ const FRAMES_PER_SECOND = 60,                                            // 'upd
 
 /* UTILITY METHODS */
 
+
+
 function normalizeX(x) { return Game.Math.normalize(x, 0, playground.width); }         // wrap x-coord around to stay within playground boundary
 function normalizeColumn(col) { return Game.Math.normalize(col, 0, playground.cols); } // wrap column  around to stay within playground boundary
 function x2col(x) { return Math.floor(normalizeX(x) / COL_WIDTH); }                    // convert x-coord to playground column index
@@ -59,13 +61,46 @@ function nearRowSurface(y, row) {                                               
 let playground,
     player,
     renderer,
-    isGamePaused = false;
+    isGamePaused = false,
+    button = document.getElementById('hide'),
+    buttonClose = document.getElementById("close"),
+    buttonInstructions = document.getElementById("instructions-btn");
 
 window.addEventListener('load', function () {
 
     'use strict';
 
     /* GAME - SETUP/UPDATE/RENDER */
+
+    button.onclick = function() {
+        var div = document.getElementById('new-game');
+        var divInstructions = document.getElementById('instructions');
+        if (div.style.display !== 'none') {
+            div.style.display = 'none';
+            divInstructions.style.display = 'none';
+            isGamePaused = false;
+        }
+        else {
+            div.style.display = 'block';
+            isGamePaused = true;
+            var timeOut = setTimeout(showGameOverScreen,0);
+        }
+    };
+
+    buttonClose.addEventListener('click', function () {
+        var div = document.getElementById('instructions');
+        if(div.style.zIndex == '6') {
+            div.style.zIndex = '4';
+        }
+    }, false);
+
+    buttonInstructions.addEventListener('click', function () {
+        console.log('buttonInstructions');
+        var div = document.getElementById('instructions');
+        if(div.style.zIndex <= '5') {
+            div.style.zIndex = '6';
+        }
+    }, false);
 
     function onkey(event, key, pressed) {
 
@@ -112,7 +147,7 @@ window.addEventListener('load', function () {
                 //TODO: show game over screen
                 console.log("Player is dead.");
                 isGamePaused = true;
-                // showGameOverScreen();
+                showGameOverScreen();
                 // tearDown();
 
             });
@@ -126,7 +161,7 @@ window.addEventListener('load', function () {
 
         function frame() {
             if (isGamePaused) {
-                return;
+                var timeOut = setTimeout(showGameOverScreen,0);
             }
 
             now = Game.Math.timestamp();
@@ -138,6 +173,25 @@ window.addEventListener('load', function () {
 
                 // UPDATE
                 player.update(oneFrameTime);
+            }
+
+            // GAME OVER
+            function showGameOverScreen() {
+                // any score?
+                document.getElementById('result').innerText = 'Scores: ';
+                document.getElementById('game-over').style.display = 'block';
+                document.getElementById('game-over-overlay').style.display = 'block';
+                isGamePaused = true;
+                document.getElementById('play-again').addEventListener('click', function() {
+                    reset();
+                });
+            }
+
+            function reset() {
+                document.getElementById('game-over').style.display = 'none';
+                document.getElementById('game-over-overlay').style.display = 'none';
+                isGamePaused = false;
+                document.getElementById("p1").innerHTML = "GAME OVER!";
             }
 
             // RENDER
@@ -156,5 +210,6 @@ window.addEventListener('load', function () {
     /* PLAY THE GAME! */
 
     run();
+
 
 });

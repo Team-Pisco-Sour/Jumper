@@ -7,13 +7,43 @@
 </head>
 <body>
     <div id="jumper-game">
+        <div id="new-game">
+            <h1>JUMPER</h1>
+            <button id="instructions-btn">Game instructions</button>
+            <button id="hide">Start new game</button>
+            <p>© 2016 - <a href="https://github.com/Team-Pisco-Sour/Jumper" target="_blank">Team "Pisco Sour"</a></p>
+            <p>Member of<a href="http://telerikacademy.com/" target="_blank"> Telerik Academy by Progress</a></p>
+        </div>
+
+        <div id="instructions">
+            <h1>Game Instructions</h1>
+            <div id="text">
+                <ul>
+                    <li>key LEFT - move left</li>
+                    <li>key RIGHT - move right</li>
+                    <li>key SPACE - jump</li>
+                    <li id="money"><span></span> Price +10 scores</li>
+                </ul>
+            </div>
+            <button id="close">Close</button>
+        </div>
+
+        <!--<div id="game-over-overlay">-->
+        <!--</div>-->
+
+        <!--<div id="game-over">-->
+            <!--<h1 id="p1">GAME OVER!</h1>-->
+            <!--<p id="result"></p>-->
+            <!--<button id="play-again">Play Again</button>-->
+        <!--</div>-->
+
         <canvas id="canvas"></canvas>
         <img class="non-displayed-images" src="./img/ground_lava.png" id="ground" />
         <img class="non-displayed-images" src="./img/player.png" id="player" />
         <img class="non-displayed-images" src="./img/coin.png" id="coin" />
-        <div id="instructions">
-            <strong>LEFT/RIGHT</strong> to move, <strong>SPACE</strong> to jump
-        </div>
+        <!--<div id="instructions2">-->
+            <!--<strong>LEFT/RIGHT</strong> to move, <strong>SPACE</strong> to jump-->
+        <!--</div>-->
     </div>
 
     <script type="text/javascript" src="./js/levels.js"></script>

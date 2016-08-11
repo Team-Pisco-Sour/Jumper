@@ -5,6 +5,7 @@ body {
     background: -moz-linear-gradient(top, #3f4c6b 0%, #111c30 100%);
     background: -webkit-linear-gradient(top, #3f4c6b 0%,#111c30 100%);
     background: linear-gradient(to bottom, #3f4c6b 0%,#111c30 100%);
+    font-family: Arial, sans-serif;
 }
 
 #jumper-game {
@@ -27,15 +28,155 @@ body {
     display: none;
 }
 
+#new-game,
 #instructions {
-    font-style: italic;
-    color: #999;
-    font-size: 9pt;
+    margin: 0.1em auto;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: 5;
+    background-color: #000;
+    border: 1px solid #fefefe;
+}
+
+#hide,
+#instructions-btn {
+    width: 250px;
+    height: 75px;
+    display: block;
+    background-color: transparent;
+    font-size: 25px;
+    border: 1px solid transparent;
+    color: green;
+    margin: 40px auto;
+}
+
+#new-game button:hover {
+    background-color: green;
+    color: white;
+}
+
+#new-game h1,
+#instructions h1  {
+    margin-bottom: 100px;
+    text-align: center;
+    font-size: 55px;
+    color: green;
+}
+
+#new-game p {
+    color: green;
+    font-size: 1em;
+    margin-top: 30px;
     text-align: center;
 }
 
-#instructions strong {
-    color: #DDD;
+#new-game p:first-of-type {
+    margin-top: 100px;
+}
+
+#new-game p a {
+    color: green;
+    font-size: 1.3em;
+}
+
+#instructions {
+    z-index: 4;
+}
+
+#text {
+    display: inline-block;
+    width: 100%;
+}
+
+#text ul {
+    list-style: none;
+}
+
+#text li {
+    font-size: 1.1em;
+    margin-bottom: 30px;
+    color: green;
+    text-align: center;
+}
+
+#close {
+    width: 250px;
+    height: 75px;
+    background-color: transparent;
+    font-size: 45px;
+    border: 1px solid transparent;
+    color: green;
+    display: block;
+    margin: 100px auto;
+}
+
+#instructions button:hover {
+    background-color: green;
+    color: white;
+}
+
+li#money {
+    line-height: 69px;
+    vertical-align: top;
+}
+
+li#money > span {
+    overflow: hidden;
+    display: inline-block;
+    background: url("../resources/gold_coin.png");
+    width: 64px;
+    height: 64px;
+    background-position:  0px -128px;
+    /*margin-left: 10px;*/
+}
+
+a {
+    text-decoration: none;
+}
+
+#game-over,
+#game-over-overlay {
+    margin: 0 auto;
+    width: 512px;
+    height: 520px;
+    position: absolute;
+    top: 80px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+    display: none;
+}
+
+#game-over-overlay {
+    background-color: black;
+    opacity: .5;
+}
+
+#game-over {
+    font-size: 25px;
+    color: green;
+    text-align: center;
+}
+
+#game-over h1 {
+    font-size: 3em;
+    margin-bottom: 0px;
+}
+
+#game-over h2 {
+    margin-bottom: 5px;
+}
+
+#game-over button {
+    font-size: 1.5em;
+    cursor: pointer;
+    border-radius: 6px;
+}
+
+#game-over button:hover {
+    border: 2px solid green;
 }
 
 /* block = 16 */
