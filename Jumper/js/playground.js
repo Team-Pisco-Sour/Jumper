@@ -4,8 +4,8 @@
 let Playground = {
 
     init: function (levelData) {
-        
-        var levelDataMap = JSON.parse(JSON.stringify(levelData.map)).reverse();
+
+        var levelDataMap = JSON.parse(JSON.stringify(levelData.map)).reverse(); //deep copy and reverse the map data array
         this.name = levelData.name;
         this.color = levelData.color;
         this.rows = levelDataMap.length;

@@ -27,6 +27,7 @@ const FRAMES_PER_SECOND = 60,                                          // 'updat
     },
     TURRET = {WIDTH: COL_WIDTH, HEIGHT: 2 * ROW_HEIGHT},            // turret size
     DIRECTION = {NONE: 0, LEFT: 1, RIGHT: 2},                        // useful enum for declaring an abstract direction
+
     IMAGES = {                                                         // image file ID's
         groundImgID: 'ground',
         playerImgID: 'player',
