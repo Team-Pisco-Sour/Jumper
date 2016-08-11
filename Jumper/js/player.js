@@ -18,15 +18,12 @@ let Player = {
         this.friction = this.maxdX / FRICTION;      // player horizontal friction
         this.input = {left: false, right: false, jump: false, jumpAvailable: true};
         this.falling = false;
-        this.stepping = DIRECTION.NONE,
-            this.collision = this.createCollisionPoints();
+        this.stepping = DIRECTION.NONE;
+        this.collision = this.createCollisionPoints();
         this.animation = PLAYER.STAND;
 
-        // Debugging in VisualStudio works only with Internet Explorer but
-        // IE supports only the old-fashioned way of custom events creating
-        this.playerDead = document.createEvent('Event'); 
+        this.playerDead = document.createEvent('Event');
         this.playerDead.initEvent('onPlayerDeath', true, true);
-        //this.playerDead = new Event('onPlayerDeath');
 
         this.score = 0;
 

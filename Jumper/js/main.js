@@ -135,7 +135,7 @@ window.addEventListener('load', function () {
         }
     }, false);
 
-    buttonPlayAgain.addEventListener('click', resetGame);
+    buttonPlayAgain.addEventListener('click', reset);
 
     document.addEventListener('keydown', function (event) {
         return onkey(event, event.keyCode, true);
@@ -152,13 +152,12 @@ window.addEventListener('load', function () {
         });
 
 
-    function resetGame() {
+    function reset() {
         document.getElementById('game-over').style.display = 'none';
         document.getElementById('game-over-overlay').style.display = 'none';
         isGamePaused = false;
         document.getElementById("p1").innerHTML = "GAME OVER!";
-        ``
-
+        player.score = 0;
         level = 0;
         run();
     }
@@ -187,7 +186,7 @@ window.addEventListener('load', function () {
     // GAME OVER
     function showGameOverScreen(text) {
         // TODO: any score?
-        document.getElementById('result').innerText = 'Score: ' + playerScore;
+        document.getElementById('result').innerText = 'Score: ' + player.score;
         document.getElementById('game-over').style.display = 'block';
         document.getElementById('game-over-overlay').style.display = 'block';
         if (text) {
