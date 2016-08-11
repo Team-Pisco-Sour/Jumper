@@ -87,7 +87,8 @@ let playground,
     nextLevelAudio = new Audio('./resources/audio/next-level.mp3'),
     mainThemeAudio = new Audio('./resources/audio/main-theme_32.mp3'),
     coinSound = new Audio('./resources/audio/coin.mp3'),
-    totalPlayerScore = 0;
+    totalPlayerScore = 0,
+    frameCounter = 0;
 
 window.addEventListener('load', function () {
 
@@ -223,7 +224,8 @@ window.addEventListener('load', function () {
         playground = Object.create(Playground).init(levelData);
         renderer = Object.create(Renderer).init();
 
-        score.innerHTML = 0;
+        frameCounter = 0;
+        score.innerHTML = totalPlayerScore;
 
         let now,
             deltaTime = 0,
@@ -249,6 +251,11 @@ window.addEventListener('load', function () {
             }
             // RENDER
             renderer.render(deltaTime);
+
+            frameCounter += 1;
+
+            if (frameCounter === 96)
+                frameCounter = 0;
 
             last = now;
             if (x2col(player.x) > playground.cols - COLUMNS_FROM_END_OF_LEVEL) {

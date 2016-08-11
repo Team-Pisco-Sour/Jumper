@@ -126,14 +126,22 @@ let Renderer = {
     renderCoin: function (ctx, col, y) {
 
         let coinImg = document.getElementById(IMAGES.coinImgID),
-            x = col2x(col + 0.5);
+            x = col2x(col + 0.5),
+            spriteCoins = 32,
+            spriteCoinIndex = ((frameCounter / 3) | 0) % 32, // coin rotation delayed
+            spriteRow = (spriteCoinIndex / 8) | 0,
+            spriteCol = spriteCoinIndex - (spriteRow * 8);
 
         ctx.drawImage(
             coinImg,
-            tx(x) - COIN.WIDTH / 2, // The x coordinate where to place the image on the canvas
-            y - COIN.HEIGHT,        // The y coordinate where to place the image on the canvas
-            COIN.WIDTH,             // The width of the image to use (stretch or reduce the image)
-            COIN.HEIGHT);           // The height of the image to use (stretch or reduce the image)
+            spriteCol * 64,
+            spriteRow * 64,
+            64,
+            64,
+            tx(x) - 64 / 2,
+            y - 64,
+            coinImg.width / 8,
+            coinImg.height / 4);
     },
 
     renderSpikes: function (ctx, col, y) {
