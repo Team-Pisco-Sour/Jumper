@@ -33,7 +33,6 @@ let Playground = {
     },
 
     createMap: function (source) {
-
         let map = [];
 
         for (let row = 0; row < this.rows; row += 1) {

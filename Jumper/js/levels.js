@@ -17,7 +17,7 @@
                 "X                                            oo            X                                                                        ",
                 "X            X                                                                                                                      ",
                 "X                oo            o             XX               X            X                                    X                   ",
-                "X                                                       X                                oo      XX         X            ooooo      ",
+                "X                                                       X                                oo      XX         X            o       o  ",
                 "X         o      XX  XX  ^   XXX   X                                                        XX                         X            ",
                 "X          ^            XX             XXX                       X       XX     XX       XX         XXXXXX         X   XXXXX XX XX  ",
                 "X   o    XXX                                      X   X                X                                                            ",
@@ -35,20 +35,20 @@
             "map": [
                 "                                   X                                                                                                ",
                 "                                                                                                                                    ",
-                "                                                                                                                                    ",
-                "X                                                                                                                                   ",
+                "                         o                                                                                                          ",
+                "X                                                          o                                                                        ",
                 "X                        X                                                                                                          ",
-                "X                                                          X                                                                        ",
-                "X            X                                                                                                                      ",
-                "X                oo            o             XX               X            X                                    X                   ",
-                "X                                                       X                                        XX         X                       ",
-                "X         o      XX  XX  ^   XXX   X                                                        XX                         X            ",
-                "X          ^            XX             XXX                       X       XX     XX       XX         XXXXXX         X   XXXXX XX  XX ",
-                "X   o    XXX                                      X   X                X                                                            ",
-                "X    ^                                                               XXX              X                                             ",
-                "X ^XXX                         ^                                                                                                    ",
-                "X X    ^                       XX                                                                                                   ",
-                "XX     X                                                                                                                            "
+                "X                                                          X               o                                                        ",
+                "X            X                                                                                                 o                    ",
+                "X                oo            o             XX         ^     X            X                                               X        ",
+                "X    o                                                  X                                o       XX       X    X                 oo ",
+                "X         o      XX  X  ^    XXX   X                                                        XX                         X            ",
+                "X          ^            XX             XXX                       X     X        XX       XX         XXX            X   XXXXX XX  XX ",
+                "X        XXX                                      X   X               XX                                                            ",
+                "X                                                                    XXX              X                                             ",
+                "X ^                            ^                                    XXXX                                                            ",
+                "X X                            XX                                  XXXXX                                                            ",
+                "XX    X                                                                                                                             "
             ]
         }
     ];

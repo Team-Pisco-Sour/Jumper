@@ -26,7 +26,6 @@ const FRAMES_PER_SECOND = 60,                                          // 'updat
     },
     TURRET = {WIDTH: COL_WIDTH, HEIGHT: 2 * ROW_HEIGHT},               // turret size
     DIRECTION = {NONE: 0, LEFT: 1, RIGHT: 2},                          // useful enum for declaring an abstract direction
-
     IMAGES = {                                                         // image file ID's
         groundImgID: 'ground',
         playerImgID: 'player',
@@ -38,7 +37,7 @@ const FRAMES_PER_SECOND = 60,                                          // 'updat
         STAND: {x: 1008, y: 0, w: 72, h: 96, frames: 1, fps: 30},    // animation - player standing still
         LEFT: {x: 576, y: 0, w: 72, h: 96, frames: 6, fps: 30}       // animation - player running left
     },
-    COLUMNS_FROM_END_OF_LEVEL = 3,                                   // the distance in columns where player is considered to have reached end of level
+    COLUMNS_FROM_END_OF_LEVEL = 4,                                   // the distance in columns where player is considered to have reached end of level
     VICTORY_TEXT = "Victory!",
     GAME_OVER_TEXT = "Game over! You died!";
 
@@ -66,7 +65,6 @@ function tx(x) {                                                    // transform
     if (x > (playground.width / 2)) {
         x = -(playground.width - x);
     }
-
     return x;
 }
 function ty(y) {                                                    // transform y-coord for rendering
@@ -88,7 +86,7 @@ let playground,
     level = 0,
     nextLevelAudio = new Audio('./resources/audio/next-level.mp3'),
     mainThemeAudio = new Audio('./resources/audio/main-theme_32.mp3'),
-    coinSound = new Audio('./resources/audio/coin.mp3')
+    coinSound = new Audio('./resources/audio/coin.mp3'),
     totalPlayerScore = 0;
 
 window.addEventListener('load', function () {
@@ -255,6 +253,7 @@ window.addEventListener('load', function () {
             last = now;
             if (x2col(player.x) > playground.cols - COLUMNS_FROM_END_OF_LEVEL) {
                 gotoNextLevel();
+                return;
             }
             requestAnimationFrame(frame);
         }
