@@ -19,14 +19,13 @@ const FRAMES_PER_SECOND = 60,                                          // 'updat
     IMPULSE = 1500 * FRAMES_PER_SECOND,                                // player jump impulse
     FALLING_JUMP = FRAMES_PER_SECOND / 5,                              // player allowed to jump for 1/5 second after falling off a platform
     STEP = {FRAMES: 8, W: COL_WIDTH / 10, H: ROW_HEIGHT},              // attributes of player stepping up
-// the distance in columns where player is considered to have reached end of level
     COIN = {                                                           // coin properties
         WIDTH: 1.5 * ROW_HEIGHT,
         HEIGHT: 1.5 * ROW_HEIGHT,
         AMOUNT: 50
     },
-    TURRET = {WIDTH: COL_WIDTH, HEIGHT: 2 * ROW_HEIGHT},            // turret size
-    DIRECTION = {NONE: 0, LEFT: 1, RIGHT: 2},                        // useful enum for declaring an abstract direction
+    TURRET = {WIDTH: COL_WIDTH, HEIGHT: 2 * ROW_HEIGHT},               // turret size
+    DIRECTION = {NONE: 0, LEFT: 1, RIGHT: 2},                          // useful enum for declaring an abstract direction
 
     IMAGES = {                                                         // image file ID's
         groundImgID: 'ground',
@@ -39,7 +38,7 @@ const FRAMES_PER_SECOND = 60,                                          // 'updat
         STAND: {x: 1008, y: 0, w: 72, h: 96, frames: 1, fps: 30},    // animation - player standing still
         LEFT: {x: 576, y: 0, w: 72, h: 96, frames: 6, fps: 30}       // animation - player running left
     },
-    COLUMNS_FROM_END_OF_LEVEL = 3,
+    COLUMNS_FROM_END_OF_LEVEL = 3,                                   // the distance in columns where player is considered to have reached end of level
     VICTORY_TEXT = "Victory!",
     GAME_OVER_TEXT = "Game over! You died!";
 
@@ -88,7 +87,8 @@ let playground,
     buttonPlayAgain,
     level = 0,
     nextLevelAudio = new Audio('./resources/audio/next-level.mp3'),
-    mainThemeAudio = new Audio('./resources/audio/main-theme_32.mp3');
+    mainThemeAudio = new Audio('./resources/audio/main-theme_32.mp3'),
+    totalPlayerScore = 0;
 
 window.addEventListener('load', function () {
 
@@ -158,6 +158,7 @@ window.addEventListener('load', function () {
         isGamePaused = false;
         document.getElementById("p1").innerHTML = "GAME OVER!";
         player.score = 0;
+        totalPlayerScore = 0;
         level = 0;
         run();
     }
@@ -186,7 +187,7 @@ window.addEventListener('load', function () {
     // GAME OVER
     function showGameOverScreen(text) {
         // TODO: any score?
-        document.getElementById('result').innerText = 'Score: ' + player.score;
+        document.getElementById('result').innerText = 'Score: ' + totalPlayerScore;
         document.getElementById('game-over').style.display = 'block';
         document.getElementById('game-over-overlay').style.display = 'block';
         if (text) {
@@ -197,6 +198,7 @@ window.addEventListener('load', function () {
     function gotoNextLevel() {
         level++;
         nextLevelAudio.play();
+        totalPlayerScore = player.score;
         run();
     }
 

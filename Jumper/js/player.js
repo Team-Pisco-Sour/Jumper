@@ -25,7 +25,7 @@ let Player = {
         this.playerDead = document.createEvent('Event');
         this.playerDead.initEvent('onPlayerDeath', true, true);
 
-        this.score = 0;
+        this.score = totalPlayerScore;
 
         return this;
     },
