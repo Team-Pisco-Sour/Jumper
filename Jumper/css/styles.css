@@ -69,7 +69,7 @@ body {
     font-size: 25px;
     border: 1px solid transparent;
     color: green;
-    margin: 40px auto;
+    margin: 15px auto;
 }
 
 #new-game button:hover {
@@ -79,10 +79,10 @@ body {
 
 #new-game h1,
 #instructions h1  {
-    margin-bottom: 100px;
+    margin-top: 30px;
     text-align: center;
-    font-size: 55px;
-    color: green;
+    font-size: 45px;
+    color: #FF5C0A;
 }
 
 #new-game p {
@@ -93,7 +93,7 @@ body {
 }
 
 #new-game p:first-of-type {
-    margin-top: 100px;
+    margin-top: 60px;
 }
 
 #new-game p a {
