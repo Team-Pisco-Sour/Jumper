@@ -86,7 +86,7 @@ let playground,
     buttonSaveScore,
     level = 0,
     nextLevelAudio = new Audio('./resources/audio/next-level.mp3'),
-    mainThemeAudio = new Audio('./resources/audio/main-theme_32.mp3'),
+    mainThemeAudio = new Audio('./resources/audio/main-theme_32-old.mp3'),
     coinSound = new Audio('./resources/audio/coin.mp3'),
     totalPlayerScore = 0,
     frameCounter = 0;
