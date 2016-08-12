@@ -210,6 +210,7 @@ window.addEventListener('load', function () {
         document.getElementById("p1").innerHTML = "GAME OVER!";
         player.score = 0;
         totalPlayerScore = 0;
+        renderer.visualized_score = 0;
         level = 0;
         run();
     }
